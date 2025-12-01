@@ -1,0 +1,7 @@
+﻿services:
+  jahitpintar:
+    image: jahitpintar
+    build:
+      context: .
+      dockerfile: jahitpintar/Dockerfile
+
