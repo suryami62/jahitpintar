@@ -16,8 +16,8 @@
 <div class="row">
     <div class="col-lg-6">
         <section>
-            <StatusMessage Message="@errorMessage"/>
-            <EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login">
+            <StatusMessage Message="@_errorMessage"/>
+            <EditForm EditContext="_editContext" method="post" OnSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator/>
                 <h2>Use a local account to log in.</h2>
                 <hr/>
@@ -76,8 +76,8 @@
 </div>
 
 @code {
-    private string? errorMessage;
-    private EditContext editContext = default!;
+    private string? _errorMessage;
+    private EditContext _editContext = default!;
 
     [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
 
@@ -89,7 +89,7 @@
     {
         Input ??= new InputModel();
 
-        editContext = new EditContext(Input);
+        _editContext = new EditContext(Input);
 
         if (HttpMethods.IsGet(HttpContext.Request.Method))
         {
@@ -102,7 +102,7 @@
     {
         if (!string.IsNullOrEmpty(Input.Passkey?.Error))
         {
-            errorMessage = $"Error: {Input.Passkey.Error}";
+            _errorMessage = $"Error: {Input.Passkey.Error}";
             return;
         }
 
@@ -115,7 +115,7 @@
         else
         {
             // If doing a password sign-in, validate the form.
-            if (!editContext.Validate())
+            if (!_editContext.Validate())
             {
                 return;
             }
@@ -143,7 +143,7 @@
         }
         else
         {
-            errorMessage = "Error: Invalid login attempt.";
+            _errorMessage = "Error: Invalid login attempt.";
         }
     }
 

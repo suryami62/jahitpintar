@@ -1,0 +1,115 @@
+@page "/ocr-test"
+@using jahitpintar.Models
+@using jahitpintar.Services
+@inject IOcrService OcrService
+@inject ILogger<Ocr> Logger
+@rendermode InteractiveServer
+
+<h3>OCR Test</h3>
+
+<p>Upload an image to extract text (e.g., clothing size invoice).</p>
+
+<InputFile OnChange="LoadFiles" accept=".jpg,.jpeg,.png,.pdf" class="form-control mb-3" />
+
+@if (_isLoading)
+{
+    <p><em>Processing...</em></p>
+}
+else if (_ocrResult != null)
+{
+    <div class="card mt-3">
+        <div class="card-header">
+            <h4>Extraction Result</h4>
+        </div>
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(_ocrResult.Title))
+            {
+                <p><strong>Title:</strong> @_ocrResult.Title</p>
+            }
+            @if (!string.IsNullOrEmpty(_ocrResult.Date))
+            {
+                <p><strong>Date:</strong> @_ocrResult.Date</p>
+            }
+            <p><strong>Confidence:</strong> @_ocrResult.ConfidenceScore.ToString("P")</p>
+            
+            @if (_ocrResult.Content.Any())
+            {
+                <h5>Content:</h5>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Label</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in _ocrResult.Content)
+                        {
+                            <tr>
+                                <td>@item.Label</td>
+                                <td>@item.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            
+            @if (!string.IsNullOrEmpty(_ocrResult.Notes))
+            {
+                <p><strong>Notes:</strong> @_ocrResult.Notes</p>
+            }
+
+            @if (!string.IsNullOrEmpty(_ocrResult.ExtractedText))
+            {
+                <details>
+                    <summary>Raw Extracted Text</summary>
+                    <pre class="mt-2 p-2 bg-light border">@_ocrResult.ExtractedText</pre>
+                </details>
+            }
+        </div>
+    </div>
+}
+else if (_errorMessage != null)
+{
+    <div class="alert alert-danger mt-3">
+        @_errorMessage
+    </div>
+}
+
+@code {
+    private OcrResult? _ocrResult;
+    private bool _isLoading;
+    private string? _errorMessage;
+    private const long MaxFileSize = 1024 * 1024 * 15; // 15 MB
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        _isLoading = true;
+        _errorMessage = null;
+        _ocrResult = null;
+
+        try
+        {
+            var file = e.File;
+            {
+                // We use a MemoryStream to buffer the file because HttpClient might need to read it multiple times, or we want to avoid timeout issues with direct browser stream
+                // Note: For production with high traffic, consider streaming to a temporary file to avoid high memory usage.
+                await using var stream = file.OpenReadStream(MaxFileSize);
+                using var ms = new MemoryStream();
+                await stream.CopyToAsync(ms);
+                ms.Position = 0;
+                
+                _ocrResult = await OcrService.RecognizeFormAsync(ms, file.Name);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error uploading file");
+            _errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+}
