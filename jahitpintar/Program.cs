@@ -26,7 +26,7 @@ builder.Services.AddAuthentication(options =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
@@ -67,5 +67,33 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    var logger = services.GetRequiredService<ILogger<Program>>();
+
+    var retryCount = 5;
+    while (retryCount > 0)
+        try
+        {
+            context.Database.Migrate();
+            logger.LogInformation("Database migrated successfully.");
+            break;
+        }
+        catch (Exception ex)
+        {
+            retryCount--;
+            if (retryCount == 0)
+            {
+                logger.LogError(ex, "An error occurred while migrating the database.");
+                throw;
+            }
+
+            logger.LogWarning(ex, "Database migration failed. Retrying... ({RetryCount} attempts left)", retryCount);
+            Thread.Sleep(2000);
+        }
+}
 
 app.Run();

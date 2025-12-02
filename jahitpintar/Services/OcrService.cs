@@ -9,25 +9,23 @@ public class OcrService(HttpClient httpClient, IConfiguration configuration) : I
     public async Task<OcrResult?> RecognizeFormAsync(Stream imageStream, string fileName)
     {
         var apiKey = configuration["kolosal_api_key"];
-        
+
         var request = new HttpRequestMessage(HttpMethod.Post, "https://api.kolosal.ai/ocr/form");
-        
+
         // Add Authorization header if api key is present
         if (!string.IsNullOrEmpty(apiKey))
-        {
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-        }
 
         var content = new MultipartFormDataContent();
-        
+
         var schemaJson = GetExtractionSchemaJson();
         content.Add(new StringContent(schemaJson), "custom_schema");
-        
+
         // Image content
         var imageContent = new StreamContent(imageStream);
         imageContent.Headers.ContentType = new MediaTypeHeaderValue(GetContentType(fileName));
         content.Add(imageContent, "image", fileName);
-        
+
         // Other fields from snippet
         content.Add(new StringContent("true"), "invoice");
         content.Add(new StringContent("auto"), "language");
@@ -35,7 +33,7 @@ public class OcrService(HttpClient httpClient, IConfiguration configuration) : I
         request.Content = content;
 
         using var response = await httpClient.SendAsync(request);
-        
+
         if (!response.IsSuccessStatusCode)
         {
             var errorContent = await response.Content.ReadAsStringAsync();
@@ -43,9 +41,9 @@ public class OcrService(HttpClient httpClient, IConfiguration configuration) : I
         }
 
         var responseString = await response.Content.ReadAsStringAsync();
-        
+
         // Attempt to deserialize to OcrResult
-        try 
+        try
         {
             var options = new JsonSerializerOptions
             {
@@ -55,7 +53,8 @@ public class OcrService(HttpClient httpClient, IConfiguration configuration) : I
         }
         catch (JsonException ex)
         {
-            throw new InvalidOperationException($"Failed to deserialize OCR response. Response content: {responseString}", ex);
+            throw new InvalidOperationException(
+                $"Failed to deserialize OCR response. Response content: {responseString}", ex);
         }
     }
 
@@ -89,8 +88,10 @@ public class OcrService(HttpClient httpClient, IConfiguration configuration) : I
                         description = "Key-value pairs extracted from the document"
                     },
                     ["notes"] = new { type = "string", description = "Any additional notes or comments found" },
-                    ["confidence_score"] = new { type = "number", description = "Confidence score of the extraction accuracy (0.0 to 1.0)" },
-                    ["extracted_text"] = new { type = "string", description = "Complete extracted text from the document" }
+                    ["confidence_score"] = new
+                        { type = "number", description = "Confidence score of the extraction accuracy (0.0 to 1.0)" },
+                    ["extracted_text"] = new
+                        { type = "string", description = "Complete extracted text from the document" }
                 },
                 required = new[] { "title", "content", "confidence_score", "extracted_text" },
                 additionalProperties = false

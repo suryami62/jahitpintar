@@ -9,7 +9,7 @@
 
 <p>Upload an image to extract text (e.g., clothing size invoice).</p>
 
-<InputFile OnChange="LoadFiles" accept=".jpg,.jpeg,.png,.pdf" class="form-control mb-3" />
+<InputFile OnChange="LoadFiles" accept=".jpg,.jpeg,.png,.pdf" class="form-control mb-3"/>
 
 @if (_isLoading)
 {
@@ -31,29 +31,29 @@ else if (_ocrResult != null)
                 <p><strong>Date:</strong> @_ocrResult.Date</p>
             }
             <p><strong>Confidence:</strong> @_ocrResult.ConfidenceScore.ToString("P")</p>
-            
+
             @if (_ocrResult.Content.Any())
             {
                 <h5>Content:</h5>
                 <table class="table table-striped">
                     <thead>
-                        <tr>
-                            <th>Label</th>
-                            <th>Value</th>
-                        </tr>
+                    <tr>
+                        <th>Label</th>
+                        <th>Value</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in _ocrResult.Content)
-                        {
-                            <tr>
-                                <td>@item.Label</td>
-                                <td>@item.Value</td>
-                            </tr>
-                        }
+                    @foreach (var item in _ocrResult.Content)
+                    {
+                        <tr>
+                            <td>@item.Label</td>
+                            <td>@item.Value</td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
             }
-            
+
             @if (!string.IsNullOrEmpty(_ocrResult.Notes))
             {
                 <p><strong>Notes:</strong> @_ocrResult.Notes</p>
@@ -98,7 +98,7 @@ else if (_errorMessage != null)
                 using var ms = new MemoryStream();
                 await stream.CopyToAsync(ms);
                 ms.Position = 0;
-                
+
                 _ocrResult = await OcrService.RecognizeFormAsync(ms, file.Name);
             }
         }
@@ -112,4 +112,5 @@ else if (_errorMessage != null)
             _isLoading = false;
         }
     }
+
 }

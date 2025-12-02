@@ -1,7 +1,21 @@
-﻿services:
+services:
   jahitpintar:
     image: jahitpintar
     build:
       context: .
       dockerfile: jahitpintar/Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Database=jahitpintar;Username=postgres;Password=example
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
 
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_DB=jahitpintar
+    ports:
+      - "5432:5432"
