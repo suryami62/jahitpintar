@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using jahitpintar.Data;
@@ -12,9 +13,11 @@ using jahitpintar.Data;
 namespace jahitpintar.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251202054121_AddCustomerTable")]
+    partial class AddCustomerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -377,8 +380,8 @@ namespace jahitpintar.Data.Migrations
                                 .IsRequired()
                                 .HasColumnType("text");
 
-                            b1.Property<DateOnly?>("DateOfBirth")
-                                .HasColumnType("date");
+                            b1.Property<DateTime?>("DateOfBirth")
+                                .HasColumnType("timestamp with time zone");
 
                             b1.Property<string>("Name")
                                 .IsRequired()

@@ -49,72 +49,6 @@ public class KolosalService(HttpClient httpClient, IConfiguration configuration)
         }
     }
 
-    public async Task<string> CreateWorkspaceAsync(string name)
-    {
-        var body = new 
-        { 
-            name = name,
-            workspace_type = "personal",
-            // Optional settings initialization
-            settings = new 
-            {
-                auto_save = true,
-                shared_resources = false,
-                custom_config = new { }
-            }
-        };
-
-        var response = await SendRequestAsync<JsonElement>(HttpMethod.Post, "/v1/workspaces", body);
-        
-        // Response: { "workspace": { "id": "..." } }
-        if (response.TryGetProperty("workspace", out var workspace) && 
-            workspace.TryGetProperty("id", out var id))
-        {
-            return id.GetString() ?? "";
-        }
-        throw new Exception("Failed to get workspace ID from response");
-    }
-
-    public async Task<List<Customer>> GetCustomersAsync(string workspaceId)
-    {
-        try
-        {
-            var response = await SendRequestAsync<JsonElement>(HttpMethod.Get, $"/v1/workspaces/{workspaceId}");
-            
-            // Response: { "workspace": { "settings": { "custom_config": { "customers": [...] } } } }
-            if (response.TryGetProperty("workspace", out var workspace) &&
-                workspace.TryGetProperty("settings", out var settings) &&
-                settings.TryGetProperty("custom_config", out var config) &&
-                config.TryGetProperty("customers", out var customersJson))
-            {
-                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                 return customersJson.Deserialize<List<Customer>>(options) ?? new List<Customer>();
-            }
-            
-            return new List<Customer>();
-        }
-        catch
-        {
-            return new List<Customer>();
-        }
-    }
-
-    public async Task SaveCustomersAsync(string workspaceId, List<Customer> customers)
-    {
-        // PATCH /v1/workspaces/{id}
-        var body = new 
-        { 
-            settings = new 
-            {
-                custom_config = new 
-                {
-                    customers = customers
-                }
-            }
-        };
-        await SendRequestAsync<JsonElement>(HttpMethod.Patch, $"/v1/workspaces/{workspaceId}", body);
-    }
-
     public async Task<string> ExtractTextFromImageAsync(Stream imageStream, string fileName)
     {
         var content = new MultipartFormDataContent();
@@ -123,7 +57,7 @@ public class KolosalService(HttpClient httpClient, IConfiguration configuration)
         content.Add(imageContent, "image", fileName);
 
         // Endpoint: /ocr/process-with-ai-extraction
-        // Output: Teks mentah (Raw text)
+        // Output: Raw text
         var request = new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/ocr/process-with-ai-extraction");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
         request.Content = content;
@@ -163,7 +97,7 @@ Teks: {text}";
 
         var body = new
         {
-            model = "gpt-4o",
+            model = "MiniMax M2",
             messages = new[]
             {
                 new { role = "user", content = prompt }
@@ -181,7 +115,10 @@ Teks: {text}";
                 content = content.Replace("```json", "").Replace("```", "").Trim();
                 try
                 {
-                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var options = new JsonSerializerOptions { 
+                        PropertyNameCaseInsensitive = true,
+                        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+                    };
                     return JsonSerializer.Deserialize<Customer>(content, options) ?? new Customer();
                 }
                 catch

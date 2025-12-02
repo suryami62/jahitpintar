@@ -9,6 +9,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> UserManager
 @inject IKolosalService KolosalService
+@inject ICustomerService CustomerService
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
@@ -119,8 +120,7 @@
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Panjang Lengan</label>
-                             <!-- Storing as numeric for now, maybe string input implies unit? Using InputText for flexibility as defined in model but logic prefers double? Wait, model has SleeveLength as string. -->
-                            <InputText @bind-Value="customer.Measurements.Upper.SleeveLength" class="form-control" placeholder="cth: 50 cm" />
+                            <InputNumber @bind-Value="customer.Measurements.Upper.SleeveLength" class="form-control" />
                         </div>
                          <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Kerung Lengan</label>
@@ -185,7 +185,6 @@
                         </div>
                          <div class="col-md-12 mb-3">
                             <label class="form-label">Riwayat Pesanan (Manual)</label>
-                            <!-- Simple comma separated for now -->
                             <textarea class="form-control" rows="2" placeholder="Gamis, Kemeja Batik..." @onchange="UpdateHistory">@string.Join(", ", customer.Preferences.OrderHistory)</textarea>
                         </div>
                     </div>
@@ -206,7 +205,6 @@
 
     private Customer customer = new();
     private ApplicationUser? user;
-    private List<Customer> allCustomers = new();
     
     private bool isLoading = true;
     private bool isSaving = false;
@@ -227,16 +225,21 @@
             if (principal.Identity?.IsAuthenticated == true)
             {
                 user = await UserManager.GetUserAsync(principal);
-                if (user != null && !string.IsNullOrEmpty(user.WorkspaceId))
+                if (user != null)
                 {
-                    allCustomers = await KolosalService.GetCustomersAsync(user.WorkspaceId);
-                    
                     if (!string.IsNullOrEmpty(Id))
                     {
-                        var found = allCustomers.FirstOrDefault(c => c.Id == Id);
+                        var found = await CustomerService.GetCustomerByIdAsync(Id);
                         if (found != null)
                         {
-                            customer = found;
+                            if (found.UserId != user.Id && !string.IsNullOrEmpty(found.UserId))
+                            {
+                                errorMessage = "Unauthorized access.";
+                            }
+                            else
+                            {
+                                customer = found;
+                            }
                         }
                         else
                         {
@@ -246,7 +249,7 @@
                 }
                 else
                 {
-                    errorMessage = "Workspace tidak ditemukan.";
+                    errorMessage = "User tidak ditemukan.";
                 }
             }
             else
@@ -273,12 +276,9 @@
             var maxFileSize = 1024 * 1024 * 10; // 10MB
             
             using var stream = file.OpenReadStream(maxFileSize);
-            using var ms = new MemoryStream();
-            await stream.CopyToAsync(ms);
-            ms.Position = 0;
 
             // 1. OCR Extraction
-            var rawText = await KolosalService.ExtractTextFromImageAsync(ms, file.Name);
+            var rawText = await KolosalService.ExtractTextFromImageAsync(stream, file.Name);
             
             // 2. Parse with AI
             if (!string.IsNullOrWhiteSpace(rawText))
@@ -374,27 +374,12 @@
 
     private async Task SaveCustomer()
     {
-        if (user == null || string.IsNullOrEmpty(user.WorkspaceId)) return;
+        if (user == null) return;
 
         isSaving = true;
         try
         {
-            if (string.IsNullOrEmpty(Id))
-            {
-                // Add new
-                allCustomers.Add(customer);
-            }
-            else
-            {
-                // Update existing
-                var index = allCustomers.FindIndex(c => c.Id == Id);
-                if (index != -1)
-                {
-                    allCustomers[index] = customer;
-                }
-            }
-
-            await KolosalService.SaveCustomersAsync(user.WorkspaceId, allCustomers);
+            await CustomerService.SaveCustomerAsync(customer, user.Id);
             NavigationManager.NavigateTo("/customers");
         }
         catch (Exception ex)

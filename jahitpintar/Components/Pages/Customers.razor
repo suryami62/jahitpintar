@@ -7,7 +7,7 @@
 @attribute [Authorize]
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> UserManager
-@inject IKolosalService KolosalService
+@inject ICustomerService CustomerService
 @rendermode InteractiveServer
 
 <PageTitle>Data Pelanggan</PageTitle>
@@ -30,12 +30,6 @@
 else if (user == null)
 {
     <p class="text-danger">Error: User not found.</p>
-}
-else if (string.IsNullOrEmpty(user.WorkspaceId))
-{
-    <div class="alert alert-warning">
-        Anda belum memiliki Workspace. Silakan hubungi admin atau daftar ulang.
-    </div>
 }
 else if (customers == null || !customers.Any())
 {
@@ -87,15 +81,15 @@ else
             if (principal.Identity?.IsAuthenticated == true)
             {
                 user = await UserManager.GetUserAsync(principal);
-                if (user != null && !string.IsNullOrEmpty(user.WorkspaceId))
+                if (user != null)
                 {
-                    customers = await KolosalService.GetCustomersAsync(user.WorkspaceId);
+                    customers = await CustomerService.GetCustomersAsync(user.Id);
                 }
             }
         }
         catch (Exception ex)
         {
-            // Handle error (e.g., API down)
+            // Handle error
             Console.WriteLine($"Error loading customers: {ex.Message}");
         }
         finally

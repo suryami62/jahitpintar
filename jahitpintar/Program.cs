@@ -42,6 +42,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 
 builder.Services.AddHttpClient<IOcrService, OcrService>();
 builder.Services.AddHttpClient<IKolosalService, KolosalService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 var app = builder.Build();
 
