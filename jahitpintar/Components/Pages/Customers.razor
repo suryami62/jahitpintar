@@ -1,0 +1,106 @@
+@page "/customers"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using jahitpintar.Data
+@using jahitpintar.Models
+@using jahitpintar.Services
+@attribute [Authorize]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> UserManager
+@inject IKolosalService KolosalService
+@rendermode InteractiveServer
+
+<PageTitle>Data Pelanggan</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Data Pelanggan</h1>
+    <a href="/customers/add" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Tambah Pelanggan
+    </a>
+</div>
+
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else if (user == null)
+{
+    <p class="text-danger">Error: User not found.</p>
+}
+else if (string.IsNullOrEmpty(user.WorkspaceId))
+{
+    <div class="alert alert-warning">
+        Anda belum memiliki Workspace. Silakan hubungi admin atau daftar ulang.
+    </div>
+}
+else if (customers == null || !customers.Any())
+{
+    <div class="alert alert-info">
+        Belum ada data pelanggan. Mulai dengan menambahkan pelanggan baru!
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Nama</th>
+                    <th>WhatsApp</th>
+                    <th>Alamat</th>
+                    <th>Opsi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var customer in customers)
+                {
+                    <tr>
+                        <td>@customer.Identity.Name</td>
+                        <td>@customer.Identity.WhatsApp</td>
+                        <td>@customer.Identity.Address</td>
+                        <td>
+                            <a href="/customers/edit/@customer.Id" class="btn btn-sm btn-outline-secondary">Detail</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private List<Customer>? customers;
+    private bool isLoading = true;
+    private ApplicationUser? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var principal = authState.User;
+            
+            if (principal.Identity?.IsAuthenticated == true)
+            {
+                user = await UserManager.GetUserAsync(principal);
+                if (user != null && !string.IsNullOrEmpty(user.WorkspaceId))
+                {
+                    customers = await KolosalService.GetCustomersAsync(user.WorkspaceId);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle error (e.g., API down)
+            Console.WriteLine($"Error loading customers: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

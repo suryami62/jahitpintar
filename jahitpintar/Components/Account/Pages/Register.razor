@@ -1,11 +1,13 @@
-﻿@page "/Account/Register"
+@page "/Account/Register"
 @using System.ComponentModel.DataAnnotations
 @using System.Text
 @using System.Text.Encodings.Web
 @using jahitpintar.Data
+@using jahitpintar.Services
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 
+@inject IKolosalService KolosalService
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
 @inject SignInManager<ApplicationUser> SignInManager
@@ -74,6 +76,17 @@
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
+
+        try
+        {
+            var workspaceId = await KolosalService.CreateWorkspaceAsync($"{Input.Email}'s Workspace");
+            user.WorkspaceId = workspaceId;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to create workspace for user {Email}", Input.Email);
+            // In a real app, handle this gracefully. For now, we proceed (user might have null WorkspaceId).
+        }
 
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();

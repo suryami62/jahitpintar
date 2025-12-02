@@ -41,6 +41,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 builder.Services.AddHttpClient<IOcrService, OcrService>();
+builder.Services.AddHttpClient<IKolosalService, KolosalService>();
 
 var app = builder.Build();
 

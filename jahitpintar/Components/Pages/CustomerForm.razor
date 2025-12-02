@@ -1,0 +1,409 @@
+@page "/customers/add"
+@page "/customers/edit/{Id}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using jahitpintar.Data
+@using jahitpintar.Models
+@using jahitpintar.Services
+@attribute [Authorize]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> UserManager
+@inject IKolosalService KolosalService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>@(string.IsNullOrEmpty(Id) ? "Tambah Pelanggan" : "Edit Pelanggan")</PageTitle>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>@(string.IsNullOrEmpty(Id) ? "Tambah Pelanggan Baru" : "Edit Data Pelanggan")</h1>
+        <a href="/customers" class="btn btn-outline-secondary">Kembali</a>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else if (errorMessage != null)
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+    else
+    {
+        <!-- Smart Input Section -->
+        <div class="card mb-4 border-primary">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-magic"></i> Input Cerdas (AI)
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-camera"></i> Scan Catatan Lama</h5>
+                        <p class="text-muted small">Upload foto catatan tangan ukuran pelanggan.</p>
+                        <InputFile OnChange="HandleFileUpload" accept=".jpg,.jpeg,.png" class="form-control" />
+                        @if (isOcrProcessing)
+                        {
+                            <div class="mt-2 text-primary">Sedang memproses gambar...</div>
+                        }
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-chat-dots"></i> Input via Chat</h5>
+                        <p class="text-muted small">Ketik data pelanggan secara natural (contoh: "Pak Budi, LD 100, Alamat Kemang").</p>
+                        <div class="input-group">
+                            <textarea @bind="chatInput" class="form-control" placeholder="Ketik di sini..." rows="2"></textarea>
+                            <button class="btn btn-outline-primary" @onclick="ProcessChatInput" disabled="@isChatProcessing">
+                                @(isChatProcessing ? "..." : "Proses")
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <EditForm Model="customer" OnValidSubmit="SaveCustomer">
+            <DataAnnotationsValidator />
+            <!-- Identity Section -->
+            <div class="card mb-3">
+                <div class="card-header">A. Data Identitas</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nama Lengkap</label>
+                            <InputText @bind-Value="customer.Identity.Name" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nomor WhatsApp</label>
+                            <InputText @bind-Value="customer.Identity.WhatsApp" class="form-control" />
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Alamat Lengkap</label>
+                            <InputTextArea @bind-Value="customer.Identity.Address" class="form-control" rows="2" />
+                        </div>
+                         <div class="col-md-6 mb-3">
+                            <label class="form-label">Tanggal Lahir</label>
+                            <InputDate @bind-Value="customer.Identity.DateOfBirth" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Measurements Section -->
+            <div class="card mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>B. Data Ukuran Badan</span>
+                    <button type="button" class="btn btn-sm btn-info text-white" @onclick="ValidateMeasurements" disabled="@isValidating">
+                         @(isValidating ? "Memeriksa..." : "Cek Kewajaran (AI)")
+                    </button>
+                </div>
+                <div class="card-body">
+                    @if (validationWarning != null)
+                    {
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i> @validationWarning
+                        </div>
+                    }
+
+                    <h6 class="text-primary mt-2">Atasan (Upper Body)</h6>
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Lingkar Dada (LD)</label>
+                            <InputNumber @bind-Value="customer.Measurements.Upper.ChestCircumference" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Lebar Bahu</label>
+                            <InputNumber @bind-Value="customer.Measurements.Upper.ShoulderWidth" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Panjang Lengan</label>
+                             <!-- Storing as numeric for now, maybe string input implies unit? Using InputText for flexibility as defined in model but logic prefers double? Wait, model has SleeveLength as string. -->
+                            <InputText @bind-Value="customer.Measurements.Upper.SleeveLength" class="form-control" placeholder="cth: 50 cm" />
+                        </div>
+                         <div class="col-md-4 mb-2">
+                            <label class="form-label">Lingkar Kerung Lengan</label>
+                            <InputNumber @bind-Value="customer.Measurements.Upper.ArmholeCircumference" class="form-control" />
+                        </div>
+                         <div class="col-md-4 mb-2">
+                            <label class="form-label">Panjang Baju</label>
+                            <InputNumber @bind-Value="customer.Measurements.Upper.ShirtLength" class="form-control" />
+                        </div>
+                    </div>
+
+                    <h6 class="text-primary mt-3">Bawahan (Lower Body)</h6>
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Lingkar Pinggang</label>
+                            <InputNumber @bind-Value="customer.Measurements.Lower.WaistCircumference" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Lingkar Pinggul</label>
+                            <InputNumber @bind-Value="customer.Measurements.Lower.HipCircumference" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Panjang Celana/Rok</label>
+                            <InputNumber @bind-Value="customer.Measurements.Lower.LegLength" class="form-control" />
+                        </div>
+                         <div class="col-md-4 mb-2">
+                            <label class="form-label">Lingkar Paha</label>
+                            <InputNumber @bind-Value="customer.Measurements.Lower.ThighCircumference" class="form-control" />
+                        </div>
+                    </div>
+
+                    <h6 class="text-primary mt-3">Tambahan</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Tinggi Badan (cm)</label>
+                            <InputNumber @bind-Value="customer.Measurements.Height" class="form-control" />
+                        </div>
+                         <div class="col-md-6 mb-2">
+                            <label class="form-label">Berat Badan (kg)</label>
+                            <InputNumber @bind-Value="customer.Measurements.Weight" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preferences Section -->
+            <div class="card mb-3">
+                <div class="card-header">C. Preferensi & Riwayat</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Preferensi Fitting</label>
+                            <InputSelect @bind-Value="customer.Preferences.FittingStyle" class="form-control">
+                                <option value="Slim Fit">Slim Fit</option>
+                                <option value="Regular">Regular</option>
+                                <option value="Loose">Loose (Longgar/Syar'i)</option>
+                            </InputSelect>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Jenis Kain Favorit</label>
+                            <InputText @bind-Value="customer.Preferences.FabricFavorite" class="form-control" />
+                        </div>
+                         <div class="col-md-12 mb-3">
+                            <label class="form-label">Riwayat Pesanan (Manual)</label>
+                            <!-- Simple comma separated for now -->
+                            <textarea class="form-control" rows="2" placeholder="Gamis, Kemeja Batik..." @onchange="UpdateHistory">@string.Join(", ", customer.Preferences.OrderHistory)</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
+                <button type="submit" class="btn btn-primary btn-lg" disabled="@isSaving">
+                    @(isSaving ? "Menyimpan..." : "Simpan Data Pelanggan")
+                </button>
+            </div>
+        </EditForm>
+    }
+</div>
+
+@code {
+    [Parameter] public string? Id { get; set; }
+
+    private Customer customer = new();
+    private ApplicationUser? user;
+    private List<Customer> allCustomers = new();
+    
+    private bool isLoading = true;
+    private bool isSaving = false;
+    private bool isOcrProcessing = false;
+    private bool isChatProcessing = false;
+    private bool isValidating = false;
+    private string? errorMessage;
+    private string? validationWarning;
+    private string chatInput = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var principal = authState.User;
+            
+            if (principal.Identity?.IsAuthenticated == true)
+            {
+                user = await UserManager.GetUserAsync(principal);
+                if (user != null && !string.IsNullOrEmpty(user.WorkspaceId))
+                {
+                    allCustomers = await KolosalService.GetCustomersAsync(user.WorkspaceId);
+                    
+                    if (!string.IsNullOrEmpty(Id))
+                    {
+                        var found = allCustomers.FirstOrDefault(c => c.Id == Id);
+                        if (found != null)
+                        {
+                            customer = found;
+                        }
+                        else
+                        {
+                            errorMessage = "Pelanggan tidak ditemukan.";
+                        }
+                    }
+                }
+                else
+                {
+                    errorMessage = "Workspace tidak ditemukan.";
+                }
+            }
+            else
+            {
+                errorMessage = "Anda harus login.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleFileUpload(InputFileChangeEventArgs e)
+    {
+        isOcrProcessing = true;
+        try
+        {
+            var file = e.File;
+            var maxFileSize = 1024 * 1024 * 10; // 10MB
+            
+            using var stream = file.OpenReadStream(maxFileSize);
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            ms.Position = 0;
+
+            // 1. OCR Extraction
+            var rawText = await KolosalService.ExtractTextFromImageAsync(ms, file.Name);
+            
+            // 2. Parse with AI
+            if (!string.IsNullOrWhiteSpace(rawText))
+            {
+                var extractedData = await KolosalService.ExtractCustomerFromTextAsync(rawText);
+                MergeCustomerData(extractedData);
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"OCR Failed: {ex.Message}";
+        }
+        finally
+        {
+            isOcrProcessing = false;
+        }
+    }
+
+    private async Task ProcessChatInput()
+    {
+        if (string.IsNullOrWhiteSpace(chatInput)) return;
+
+        isChatProcessing = true;
+        try
+        {
+            var extractedData = await KolosalService.ExtractCustomerFromTextAsync(chatInput);
+            MergeCustomerData(extractedData);
+            chatInput = ""; // Clear input
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"AI Processing Failed: {ex.Message}";
+        }
+        finally
+        {
+            isChatProcessing = false;
+        }
+    }
+
+    private void MergeCustomerData(Customer extracted)
+    {
+        // intelligently merge non-null/non-default values
+        if (!string.IsNullOrEmpty(extracted.Identity.Name)) customer.Identity.Name = extracted.Identity.Name;
+        if (!string.IsNullOrEmpty(extracted.Identity.Address)) customer.Identity.Address = extracted.Identity.Address;
+        if (!string.IsNullOrEmpty(extracted.Identity.WhatsApp)) customer.Identity.WhatsApp = extracted.Identity.WhatsApp;
+        
+        // Measurements
+        if (extracted.Measurements.Upper.ChestCircumference > 0) customer.Measurements.Upper.ChestCircumference = extracted.Measurements.Upper.ChestCircumference;
+        if (extracted.Measurements.Upper.ShoulderWidth > 0) customer.Measurements.Upper.ShoulderWidth = extracted.Measurements.Upper.ShoulderWidth;
+        if (extracted.Measurements.Upper.ShirtLength > 0) customer.Measurements.Upper.ShirtLength = extracted.Measurements.Upper.ShirtLength;
+        // ... (can add more fields)
+        
+        // Preferences
+        if (!string.IsNullOrEmpty(extracted.Preferences.FittingStyle)) customer.Preferences.FittingStyle = extracted.Preferences.FittingStyle;
+
+        StateHasChanged();
+    }
+
+    private async Task ValidateMeasurements()
+    {
+        isValidating = true;
+        validationWarning = null;
+        try
+        {
+            var warning = await KolosalService.ValidateMeasurementsAsync(customer.Measurements);
+            if (!string.IsNullOrEmpty(warning) && !warning.Contains("OK", StringComparison.OrdinalIgnoreCase))
+            {
+                validationWarning = warning;
+            }
+            else
+            {
+                // Maybe show success toast?
+            }
+        }
+        catch (Exception ex)
+        {
+            validationWarning = $"Validation Error: {ex.Message}";
+        }
+        finally
+        {
+            isValidating = false;
+        }
+    }
+
+    private void UpdateHistory(ChangeEventArgs e)
+    {
+        var val = e.Value?.ToString();
+        if (val != null)
+        {
+            customer.Preferences.OrderHistory = val.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToList();
+        }
+    }
+
+    private async Task SaveCustomer()
+    {
+        if (user == null || string.IsNullOrEmpty(user.WorkspaceId)) return;
+
+        isSaving = true;
+        try
+        {
+            if (string.IsNullOrEmpty(Id))
+            {
+                // Add new
+                allCustomers.Add(customer);
+            }
+            else
+            {
+                // Update existing
+                var index = allCustomers.FindIndex(c => c.Id == Id);
+                if (index != -1)
+                {
+                    allCustomers[index] = customer;
+                }
+            }
+
+            await KolosalService.SaveCustomersAsync(user.WorkspaceId, allCustomers);
+            NavigationManager.NavigateTo("/customers");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to save: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+}
