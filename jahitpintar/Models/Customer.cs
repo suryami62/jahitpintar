@@ -12,7 +12,8 @@ public class Customer
 public class IdentityInfo
 {
     public string Name { get; set; } = string.Empty;
-    public string WhatsApp { get; set; } = string.Empty;
+    public string PhoneNumber { get; set; } = string.Empty;
+    public List<string> SocialMediaPlatforms { get; set; } = new();
     public string Address { get; set; } = string.Empty;
     public DateOnly? DateOfBirth { get; set; }
 }

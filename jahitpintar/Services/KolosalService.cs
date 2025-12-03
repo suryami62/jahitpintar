@@ -85,13 +85,14 @@ public class KolosalService(HttpClient httpClient, IConfiguration configuration)
         // Use /v1/chat/completions
         var prompt = $@"Ekstrak data berikut menjadi JSON dengan field matching this structure:
 {{
-  ""identity"": {{ ""name"": """", ""address"": """", ""whatsapp"": """" }},
+  ""identity"": {{ ""name"": """", ""address"": """", ""phone_number"": """", ""social_media_platforms"": [] }},
   ""measurements"": {{ 
     ""upper_body"": {{ ""chest_circumference"": 0, ""shoulder_width"": 0, ""shirt_length"": 0 }},
     ""lower_body"": {{ ""waist_circumference"": 0, ""hip_circumference"": 0, ""leg_length"": 0 }}
   }},
   ""preferences"": {{ ""fitting_style"": """", ""fabric_favorite"": """" }}
 }}
+For 'social_media_platforms', detect context (e.g. 'WA: 0812' -> ['WhatsApp']).
 Only return the JSON. No markdown.
 Teks: {text}";
 
