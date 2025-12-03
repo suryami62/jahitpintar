@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace jahitpintar.Services;
 
-public class CustomerService(ApplicationDbContext context) : ICustomerService
+public class CustomerService(IDbContextFactory<ApplicationDbContext> factory) : ICustomerService
 {
     public async Task<List<Customer>> GetCustomersAsync(string userId)
     {
+        using var context = await factory.CreateDbContextAsync();
         return await context.Customers
             .Where(c => c.UserId == userId)
             .AsNoTracking()
@@ -16,6 +17,7 @@ public class CustomerService(ApplicationDbContext context) : ICustomerService
 
     public async Task<Customer?> GetCustomerByIdAsync(string id)
     {
+        using var context = await factory.CreateDbContextAsync();
         return await context.Customers
             .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == id);
@@ -23,8 +25,9 @@ public class CustomerService(ApplicationDbContext context) : ICustomerService
 
     public async Task SaveCustomerAsync(Customer customer, string userId)
     {
+        using var context = await factory.CreateDbContextAsync();
         var existing = await context.Customers
-            .AsNoTracking()
+            .AsNoTracking() // Just checking existence and ownership, not attaching yet
             .FirstOrDefaultAsync(c => c.Id == customer.Id);
 
         if (existing == null)
@@ -48,6 +51,7 @@ public class CustomerService(ApplicationDbContext context) : ICustomerService
 
     public async Task DeleteCustomerAsync(string id)
     {
+        using var context = await factory.CreateDbContextAsync();
         var customer = await context.Customers.FindAsync(id);
         if (customer != null)
         {
