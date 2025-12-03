@@ -28,10 +28,18 @@ public class Measurements
 public class UpperBody
 {
     public double ChestCircumference { get; set; } 
+    public double WaistCircumference { get; set; }
+    public double HipCircumference { get; set; }
+    public double NeckCircumference { get; set; }
     public double ShoulderWidth { get; set; } 
     public double SleeveLength { get; set; } 
     public double ArmholeCircumference { get; set; } 
+    public double ArmCircumference { get; set; }
+    public double WristCircumference { get; set; }
+    public double FrontWidth { get; set; }
+    public double BackWidth { get; set; }
     public double ShirtLength { get; set; } 
+    public double HipHeight { get; set; }
 }
 
 public class LowerBody

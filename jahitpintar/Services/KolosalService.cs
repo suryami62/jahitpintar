@@ -87,7 +87,7 @@ public class KolosalService(HttpClient httpClient, IConfiguration configuration)
 {{
   ""identity"": {{ ""name"": """", ""address"": """", ""phone_number"": """", ""date_of_birth"": ""YYYY-MM-DD"", ""social_media_platforms"": [] }},
   ""measurements"": {{ 
-    ""upper"": {{ ""chest_circumference"": 0, ""shoulder_width"": 0, ""shirt_length"": 0, ""sleeve_length"": 0, ""armhole_circumference"": 0 }},
+    ""upper"": {{ ""chest_circumference"": 0, ""waist_circumference"": 0, ""hip_circumference"": 0, ""neck_circumference"": 0, ""shoulder_width"": 0, ""sleeve_length"": 0, ""armhole_circumference"": 0, ""arm_circumference"": 0, ""wrist_circumference"": 0, ""front_width"": 0, ""back_width"": 0, ""shirt_length"": 0, ""hip_height"": 0 }},
     ""lower"": {{ ""waist_circumference"": 0, ""hip_circumference"": 0, ""leg_length"": 0, ""thigh_circumference"": 0 }},
     ""height"": 0,
     ""weight"": 0

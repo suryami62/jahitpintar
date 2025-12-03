@@ -116,6 +116,18 @@
                             <InputNumber @bind-Value="customer.Measurements.Upper.ChestCircumference" class="form-control" />
                         </div>
                         <div class="col-md-4 mb-2">
+                            <label class="form-label">Lingkar Pinggang</label>
+                            <InputNumber @bind-Value="customer.Measurements.Upper.WaistCircumference" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Lingkar Pinggul</label>
+                            <InputNumber @bind-Value="customer.Measurements.Upper.HipCircumference" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Lingkar Leher</label>
+                            <InputNumber @bind-Value="customer.Measurements.Upper.NeckCircumference" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
                             <label class="form-label">Lebar Bahu</label>
                             <InputNumber @bind-Value="customer.Measurements.Upper.ShoulderWidth" class="form-control" />
                         </div>
@@ -126,6 +138,26 @@
                          <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Kerung Lengan</label>
                             <InputNumber @bind-Value="customer.Measurements.Upper.ArmholeCircumference" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Lingkar Lengan</label>
+                            <InputNumber @bind-Value="customer.Measurements.Upper.ArmCircumference" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Lingkar Pergelangan</label>
+                            <InputNumber @bind-Value="customer.Measurements.Upper.WristCircumference" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Lebar Muka</label>
+                            <InputNumber @bind-Value="customer.Measurements.Upper.FrontWidth" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Lebar Punggung</label>
+                            <InputNumber @bind-Value="customer.Measurements.Upper.BackWidth" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Tinggi Pinggul</label>
+                            <InputNumber @bind-Value="customer.Measurements.Upper.HipHeight" class="form-control" />
                         </div>
                          <div class="col-md-4 mb-2">
                             <label class="form-label">Panjang Baju</label>
@@ -358,10 +390,18 @@
         // Measurements
         // Upper
         if (extracted.Measurements.Upper.ChestCircumference > 0) customer.Measurements.Upper.ChestCircumference = extracted.Measurements.Upper.ChestCircumference;
+        if (extracted.Measurements.Upper.WaistCircumference > 0) customer.Measurements.Upper.WaistCircumference = extracted.Measurements.Upper.WaistCircumference;
+        if (extracted.Measurements.Upper.HipCircumference > 0) customer.Measurements.Upper.HipCircumference = extracted.Measurements.Upper.HipCircumference;
+        if (extracted.Measurements.Upper.NeckCircumference > 0) customer.Measurements.Upper.NeckCircumference = extracted.Measurements.Upper.NeckCircumference;
         if (extracted.Measurements.Upper.ShoulderWidth > 0) customer.Measurements.Upper.ShoulderWidth = extracted.Measurements.Upper.ShoulderWidth;
-        if (extracted.Measurements.Upper.ShirtLength > 0) customer.Measurements.Upper.ShirtLength = extracted.Measurements.Upper.ShirtLength;
         if (extracted.Measurements.Upper.SleeveLength > 0) customer.Measurements.Upper.SleeveLength = extracted.Measurements.Upper.SleeveLength;
         if (extracted.Measurements.Upper.ArmholeCircumference > 0) customer.Measurements.Upper.ArmholeCircumference = extracted.Measurements.Upper.ArmholeCircumference;
+        if (extracted.Measurements.Upper.ArmCircumference > 0) customer.Measurements.Upper.ArmCircumference = extracted.Measurements.Upper.ArmCircumference;
+        if (extracted.Measurements.Upper.WristCircumference > 0) customer.Measurements.Upper.WristCircumference = extracted.Measurements.Upper.WristCircumference;
+        if (extracted.Measurements.Upper.FrontWidth > 0) customer.Measurements.Upper.FrontWidth = extracted.Measurements.Upper.FrontWidth;
+        if (extracted.Measurements.Upper.BackWidth > 0) customer.Measurements.Upper.BackWidth = extracted.Measurements.Upper.BackWidth;
+        if (extracted.Measurements.Upper.HipHeight > 0) customer.Measurements.Upper.HipHeight = extracted.Measurements.Upper.HipHeight;
+        if (extracted.Measurements.Upper.ShirtLength > 0) customer.Measurements.Upper.ShirtLength = extracted.Measurements.Upper.ShirtLength;
 
         // Lower
         if (extracted.Measurements.Lower.WaistCircumference > 0) customer.Measurements.Lower.WaistCircumference = extracted.Measurements.Lower.WaistCircumference;
