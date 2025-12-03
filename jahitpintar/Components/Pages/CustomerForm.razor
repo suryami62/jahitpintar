@@ -10,6 +10,7 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IKolosalService KolosalService
 @inject ICustomerService CustomerService
+@inject IOcrService OcrService
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
@@ -45,7 +46,7 @@
                     <div class="col-md-6 mb-3">
                         <h5><i class="bi bi-camera"></i> Scan Catatan Lama</h5>
                         <p class="text-muted small">Upload foto catatan tangan ukuran pelanggan.</p>
-                        <InputFile OnChange="HandleFileUpload" accept=".jpg,.jpeg,.png" class="form-control" />
+                        <InputFile OnChange="HandleFileUpload" accept=".jpg,.jpeg,.png,.pdf" class="form-control" />
                         @if (isOcrProcessing)
                         {
                             <div class="mt-2 text-primary">Sedang memproses gambar...</div>
@@ -273,17 +274,20 @@
         try
         {
             var file = e.File;
-            var maxFileSize = 1024 * 1024 * 10; // 10MB
+            var maxFileSize = 1024 * 1024 * 15; // 15MB
             
-            using var stream = file.OpenReadStream(maxFileSize);
+            await using var stream = file.OpenReadStream(maxFileSize);
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            ms.Position = 0;
 
-            // 1. OCR Extraction
-            var rawText = await KolosalService.ExtractTextFromImageAsync(stream, file.Name);
+            // 1. OCR Extraction using OcrService
+            var ocrResult = await OcrService.RecognizeFormAsync(ms, file.Name);
             
             // 2. Parse with AI
-            if (!string.IsNullOrWhiteSpace(rawText))
+            if (ocrResult != null && !string.IsNullOrWhiteSpace(ocrResult.ExtractedText))
             {
-                var extractedData = await KolosalService.ExtractCustomerFromTextAsync(rawText);
+                var extractedData = await KolosalService.ExtractCustomerFromTextAsync(ocrResult.ExtractedText);
                 MergeCustomerData(extractedData);
             }
         }
