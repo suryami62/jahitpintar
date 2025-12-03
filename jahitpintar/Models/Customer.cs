@@ -15,7 +15,6 @@ public class IdentityInfo
     public string PhoneNumber { get; set; } = string.Empty;
     public List<string> SocialMediaPlatforms { get; set; } = new();
     public string Address { get; set; } = string.Empty;
-    public DateOnly? DateOfBirth { get; set; }
 }
 
 public class Measurements
