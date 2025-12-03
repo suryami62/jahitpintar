@@ -359,14 +359,41 @@
             }
         }
         
+        // Identity - DateOfBirth
+        if (extracted.Identity.DateOfBirth.HasValue) customer.Identity.DateOfBirth = extracted.Identity.DateOfBirth;
+
         // Measurements
+        // Upper
         if (extracted.Measurements.Upper.ChestCircumference > 0) customer.Measurements.Upper.ChestCircumference = extracted.Measurements.Upper.ChestCircumference;
         if (extracted.Measurements.Upper.ShoulderWidth > 0) customer.Measurements.Upper.ShoulderWidth = extracted.Measurements.Upper.ShoulderWidth;
         if (extracted.Measurements.Upper.ShirtLength > 0) customer.Measurements.Upper.ShirtLength = extracted.Measurements.Upper.ShirtLength;
-        // ... (can add more fields)
+        if (extracted.Measurements.Upper.SleeveLength > 0) customer.Measurements.Upper.SleeveLength = extracted.Measurements.Upper.SleeveLength;
+        if (extracted.Measurements.Upper.ArmholeCircumference > 0) customer.Measurements.Upper.ArmholeCircumference = extracted.Measurements.Upper.ArmholeCircumference;
+
+        // Lower
+        if (extracted.Measurements.Lower.WaistCircumference > 0) customer.Measurements.Lower.WaistCircumference = extracted.Measurements.Lower.WaistCircumference;
+        if (extracted.Measurements.Lower.HipCircumference > 0) customer.Measurements.Lower.HipCircumference = extracted.Measurements.Lower.HipCircumference;
+        if (extracted.Measurements.Lower.LegLength > 0) customer.Measurements.Lower.LegLength = extracted.Measurements.Lower.LegLength;
+        if (extracted.Measurements.Lower.ThighCircumference > 0) customer.Measurements.Lower.ThighCircumference = extracted.Measurements.Lower.ThighCircumference;
+        
+        // General
+        if (extracted.Measurements.Height > 0) customer.Measurements.Height = extracted.Measurements.Height;
+        if (extracted.Measurements.Weight > 0) customer.Measurements.Weight = extracted.Measurements.Weight;
         
         // Preferences
         if (!string.IsNullOrEmpty(extracted.Preferences.FittingStyle)) customer.Preferences.FittingStyle = extracted.Preferences.FittingStyle;
+        if (!string.IsNullOrEmpty(extracted.Preferences.FabricFavorite)) customer.Preferences.FabricFavorite = extracted.Preferences.FabricFavorite;
+
+        if (extracted.Preferences.OrderHistory.Any())
+        {
+            foreach (var history in extracted.Preferences.OrderHistory)
+            {
+                if (!customer.Preferences.OrderHistory.Contains(history))
+                {
+                    customer.Preferences.OrderHistory.Add(history);
+                }
+            }
+        }
 
         StateHasChanged();
     }

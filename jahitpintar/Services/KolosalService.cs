@@ -85,12 +85,14 @@ public class KolosalService(HttpClient httpClient, IConfiguration configuration)
         // Use /v1/chat/completions
         var prompt = $@"Ekstrak data berikut menjadi JSON dengan field matching this structure:
 {{
-  ""identity"": {{ ""name"": """", ""address"": """", ""phone_number"": """", ""social_media_platforms"": [] }},
+  ""identity"": {{ ""name"": """", ""address"": """", ""phone_number"": """", ""date_of_birth"": ""YYYY-MM-DD"", ""social_media_platforms"": [] }},
   ""measurements"": {{ 
-    ""upper_body"": {{ ""chest_circumference"": 0, ""shoulder_width"": 0, ""shirt_length"": 0 }},
-    ""lower_body"": {{ ""waist_circumference"": 0, ""hip_circumference"": 0, ""leg_length"": 0 }}
+    ""upper"": {{ ""chest_circumference"": 0, ""shoulder_width"": 0, ""shirt_length"": 0, ""sleeve_length"": 0, ""armhole_circumference"": 0 }},
+    ""lower"": {{ ""waist_circumference"": 0, ""hip_circumference"": 0, ""leg_length"": 0, ""thigh_circumference"": 0 }},
+    ""height"": 0,
+    ""weight"": 0
   }},
-  ""preferences"": {{ ""fitting_style"": """", ""fabric_favorite"": """" }}
+  ""preferences"": {{ ""fitting_style"": """", ""fabric_favorite"": """", ""order_history"": [] }}
 }}
 For 'social_media_platforms', detect context (e.g. 'WA: 0812' -> ['WhatsApp']).
 Only return the JSON. No markdown.
