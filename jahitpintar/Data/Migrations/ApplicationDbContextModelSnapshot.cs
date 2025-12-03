@@ -456,9 +456,8 @@ namespace jahitpintar.Data.Migrations
                                     b2.Property<double>("ShoulderWidth")
                                         .HasColumnType("double precision");
 
-                                    b2.Property<string>("SleeveLength")
-                                        .IsRequired()
-                                        .HasColumnType("text");
+                                    b2.Property<double>("SleeveLength")
+                                        .HasColumnType("double precision");
 
                                     b2.HasKey("MeasurementsCustomerId");
 
