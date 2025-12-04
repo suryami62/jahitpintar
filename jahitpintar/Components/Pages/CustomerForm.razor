@@ -12,7 +12,7 @@
 @inject ICustomerService CustomerService
 @inject IOcrService OcrService
 @inject NavigationManager NavigationManager
-@inject IJSRuntime JSRuntime
+@inject IJSRuntime JsRuntime
 @rendermode InteractiveServer
 
 <PageTitle>@(string.IsNullOrEmpty(Id) ? "Tambah Pelanggan" : "Edit Pelanggan")</PageTitle>
@@ -234,7 +234,8 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12 mb-3">
-                            <InputTextArea @bind-Value="_customer.AdditionalNotes" class="form-control" rows="4" placeholder="Jenis kain, model baju, pesanan khusus, dll..." />
+                            <InputTextArea @bind-Value="_customer.AdditionalNotes" class="form-control" rows="4"
+                                           placeholder="Jenis kain, model baju, pesanan khusus, dll..."/>
                         </div>
                     </div>
                 </div>
@@ -243,7 +244,8 @@
             <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
                 @if (!string.IsNullOrEmpty(Id))
                 {
-                    <button type="button" class="btn btn-outline-danger btn-lg me-md-2" @onclick="DeleteCustomer" disabled="@_isSaving">
+                    <button type="button" class="btn btn-outline-danger btn-lg me-md-2" @onclick="DeleteCustomer"
+                            disabled="@_isSaving">
                         Hapus
                     </button>
                 }
@@ -458,7 +460,7 @@
 
     private async Task DeleteCustomer()
     {
-        if (!await JSRuntime.InvokeAsync<bool>("confirm", "Apakah Anda yakin ingin menghapus data pelanggan ini?"))
+        if (!await JsRuntime.InvokeAsync<bool>("confirm", "Apakah Anda yakin ingin menghapus data pelanggan ini?"))
         {
             return;
         }

@@ -1,0 +1,281 @@
+@page "/customers/details/{Id}"
+@using jahitpintar.Data
+@using jahitpintar.Models
+@using jahitpintar.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@attribute [Authorize]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> UserManager
+@inject ICustomerService CustomerService
+@rendermode InteractiveServer
+
+<PageTitle>Detail Pelanggan</PageTitle>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <h1 class="h2 mb-0">Detail Pelanggan</h1>
+            <small class="text-muted">Informasi lengkap data pelanggan</small>
+        </div>
+        <a href="/customers" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Kembali
+        </a>
+    </div>
+
+    @if (_isLoading)
+    {
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else if (_errorMessage != null)
+    {
+        <div class="alert alert-danger">@_errorMessage</div>
+    }
+    else if (_customer != null)
+    {
+        <!-- Identity Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-person-vcard me-2"></i>Data Identitas</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3 text-muted">Nama Lengkap</dt>
+                    <dd class="col-sm-9 fw-bold">@_customer.Identity.Name</dd>
+
+                    <dt class="col-sm-3 text-muted">Nomor Handphone</dt>
+                    <dd class="col-sm-9">@_customer.Identity.PhoneNumber</dd>
+
+                    <dt class="col-sm-3 text-muted">Sosial Media</dt>
+                    <dd class="col-sm-9">
+                        @if (_customer.Identity.SocialMediaPlatforms.Any())
+                        {
+                            <div class="d-flex gap-1 flex-wrap">
+                                @foreach (var platform in _customer.Identity.SocialMediaPlatforms)
+                                {
+                                    <span class="badge bg-info text-dark">@platform</span>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="text-muted">-</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3 text-muted">Alamat Lengkap</dt>
+                    <dd class="col-sm-9">@_customer.Identity.Address</dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Measurements Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-rulers me-2"></i>Data Ukuran Badan</h5>
+            </div>
+            <div class="card-body">
+
+                <!-- Upper Body -->
+                <div class="p-3 bg-light bg-opacity-25 rounded mb-3 border">
+                    <h6 class="text-primary fw-bold border-bottom pb-2 mb-3">
+                        <i class="bi bi-arrow-up-circle me-2"></i>Atasan (Upper Body)
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-6 text-muted">Lingkar Dada (LD)</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Upper.ChestCircumference)</dd>
+
+                                <dt class="col-sm-6 text-muted">Lingkar Pinggang</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Upper.WaistCircumference)</dd>
+
+                                <dt class="col-sm-6 text-muted">Lingkar Pinggul</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Upper.HipCircumference)</dd>
+
+                                <dt class="col-sm-6 text-muted">Lingkar Leher</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Upper.NeckCircumference)</dd>
+
+                                <dt class="col-sm-6 text-muted">Lebar Bahu</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Upper.ShoulderWidth)</dd>
+
+                                <dt class="col-sm-6 text-muted">Panjang Lengan</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Upper.SleeveLength)</dd>
+
+                                <dt class="col-sm-6 text-muted">Lingkar Kerung Lengan</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Upper.ArmholeCircumference)</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-6 text-muted">Lingkar Lengan</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Upper.ArmCircumference)</dd>
+
+                                <dt class="col-sm-6 text-muted">Lingkar Pergelangan</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Upper.WristCircumference)</dd>
+
+                                <dt class="col-sm-6 text-muted">Lebar Muka</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Upper.FrontWidth)</dd>
+
+                                <dt class="col-sm-6 text-muted">Lebar Punggung</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Upper.BackWidth)</dd>
+
+                                <dt class="col-sm-6 text-muted">Tinggi Pinggul</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Upper.HipHeight)</dd>
+
+                                <dt class="col-sm-6 text-muted">Panjang Baju</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Upper.ShirtLength)</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lower Body -->
+                <div class="p-3 bg-light bg-opacity-25 rounded mb-3 border">
+                    <h6 class="text-primary fw-bold border-bottom pb-2 mb-3">
+                        <i class="bi bi-arrow-down-circle me-2"></i>Bawahan (Lower Body)
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-6 text-muted">Lingkar Pinggang</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Lower.WaistCircumference)</dd>
+
+                                <dt class="col-sm-6 text-muted">Lingkar Pesak</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Lower.CrotchCircumference)</dd>
+
+                                <dt class="col-sm-6 text-muted">Lingkar Paha</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Lower.ThighCircumference)</dd>
+
+                                <dt class="col-sm-6 text-muted">Lingkar Lutut</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Lower.KneeCircumference)</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-6 text-muted">Lingkar Kaki</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Lower.AnkleCircumference)</dd>
+
+                                <dt class="col-sm-6 text-muted">Panjang Celana/Rok</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Lower.PantsLength)</dd>
+
+                                <dt class="col-sm-6 text-muted">Tinggi Duduk</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Lower.SeatedHeight)</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional -->
+                <div class="p-3 bg-light bg-opacity-25 rounded border">
+                    <h6 class="text-primary fw-bold border-bottom pb-2 mb-3">
+                        <i class="bi bi-plus-circle me-2"></i>Tambahan
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-6 text-muted">Tinggi Badan</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Height)</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-6 text-muted">Berat Badan</dt>
+                                <dd class="col-sm-6 fw-bold">@FormatMeasurement(_customer.Measurements.Weight, "kg")</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preferences Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-journal-text me-2"></i>Catatan Tambahan</h5>
+            </div>
+            <div class="card-body">
+                <div class="p-3 bg-light rounded">
+                    <p class="card-text mb-0" style="white-space: pre-wrap;">@_customer.AdditionalNotes</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
+            <a href="/customers/edit/@_customer.Id" class="btn btn-warning btn-lg px-4 shadow-sm">
+                <i class="bi bi-pencil-square me-2"></i>Edit Data
+            </a>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Id { get; set; } = "";
+
+    private Customer? _customer;
+    private ApplicationUser? _user;
+    private bool _isLoading = true;
+    private string? _errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var principal = authState.User;
+
+            if (principal.Identity?.IsAuthenticated == true)
+            {
+                _user = await UserManager.GetUserAsync(principal);
+                if (_user != null)
+                {
+                    if (!string.IsNullOrEmpty(Id))
+                    {
+                        var found = await CustomerService.GetCustomerByIdAsync(Id);
+                        if (found != null)
+                        {
+                            if (found.UserId != _user.Id && !string.IsNullOrEmpty(found.UserId))
+                            {
+                                _errorMessage = "Unauthorized access.";
+                            }
+                            else
+                            {
+                                _customer = found;
+                            }
+                        }
+                        else
+                        {
+                            _errorMessage = "Pelanggan tidak ditemukan.";
+                        }
+                    }
+                }
+                else
+                {
+                    _errorMessage = "User tidak ditemukan.";
+                }
+            }
+            else
+            {
+                _errorMessage = "Anda harus login.";
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private string FormatMeasurement(double value, string unit = "cm")
+    {
+        return value > 0 ? $"{value} {unit}" : "-";
+    }
+
+}

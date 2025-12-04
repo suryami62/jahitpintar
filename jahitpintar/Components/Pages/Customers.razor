@@ -53,9 +53,17 @@ else
             @foreach (var customer in _customers)
             {
                 <tr>
-                    <td>@customer.Identity.Name</td>
                     <td>
-                        <div>@customer.Identity.PhoneNumber</div>
+                        <a href="/customers/details/@customer.Id" class="text-decoration-none fw-bold text-dark">
+                            @customer.Identity.Name
+                        </a>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="/customers/details/@customer.Id" class="text-decoration-none text-dark">
+                                @customer.Identity.PhoneNumber
+                            </a>
+                        </div>
                         <div class="d-flex gap-1 mt-1">
                             @foreach (var platform in customer.Identity.SocialMediaPlatforms)
                             {
@@ -63,7 +71,11 @@ else
                             }
                         </div>
                     </td>
-                    <td>@customer.Identity.Address</td>
+                    <td>
+                        <a href="/customers/details/@customer.Id" class="text-decoration-none text-dark">
+                            @customer.Identity.Address
+                        </a>
+                    </td>
                     <td>
                         <a href="/customers/edit/@customer.Id" class="btn btn-sm btn-warning">Edit</a></td>
                 </tr>
