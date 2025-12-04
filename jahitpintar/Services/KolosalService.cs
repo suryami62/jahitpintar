@@ -7,47 +7,10 @@ namespace jahitpintar.Services;
 
 public class KolosalService(HttpClient httpClient, IConfiguration configuration) : IKolosalService
 {
+    private readonly string _apiKey = configuration["kolosal_api_key"] ??
+                                      throw new InvalidOperationException("Kolosal API Key is missing");
+
     private readonly string _baseUrl = "https://api.kolosal.ai";
-    private readonly string _apiKey = configuration["kolosal_api_key"] ?? throw new InvalidOperationException("Kolosal API Key is missing");
-
-    private async Task<T> SendRequestAsync<T>(HttpMethod method, string endpoint, object? body = null, MultipartFormDataContent? multipartContent = null)
-    {
-        var request = new HttpRequestMessage(method, $"{_baseUrl}{endpoint}");
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
-
-        if (multipartContent != null)
-        {
-            request.Content = multipartContent;
-        }
-        else if (body != null)
-        {
-            var json = JsonSerializer.Serialize(body);
-            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-        }
-
-        using var response = await httpClient.SendAsync(request);
-        
-        // Log error if failed
-        if (!response.IsSuccessStatusCode)
-        {
-            var error = await response.Content.ReadAsStringAsync();
-            throw new HttpRequestException($"API Error {response.StatusCode}: {error}");
-        }
-
-        var content = await response.Content.ReadAsStringAsync();
-        if (typeof(T) == typeof(string)) return (T)(object)content;
-
-        try
-        {
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            return JsonSerializer.Deserialize<T>(content, options) ?? throw new InvalidOperationException("Response was null");
-        }
-        catch (JsonException)
-        {
-             // If we expected a specific object but got something else, return default if possible or throw
-             throw;
-        }
-    }
 
     public async Task<string> ExtractTextFromImageAsync(Stream imageStream, string fileName)
     {
@@ -65,9 +28,9 @@ public class KolosalService(HttpClient httpClient, IConfiguration configuration)
         using var response = await httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
         var responseString = await response.Content.ReadAsStringAsync();
-        
+
         // Try parsing as JSON to find text field
-        try 
+        try
         {
             using var doc = JsonDocument.Parse(responseString);
             if (doc.RootElement.TryGetProperty("text", out var text)) return text.GetString() ?? "";
@@ -108,7 +71,7 @@ Teks: {text}";
         };
 
         var response = await SendRequestAsync<JsonElement>(HttpMethod.Post, "/v1/chat/completions", body);
-        
+
         // Extract content from choices[0].message.content
         if (response.TryGetProperty("choices", out var choices) && choices.GetArrayLength() > 0)
         {
@@ -118,7 +81,8 @@ Teks: {text}";
                 content = content.Replace("```json", "").Replace("```", "").Trim();
                 try
                 {
-                    var options = new JsonSerializerOptions { 
+                    var options = new JsonSerializerOptions
+                    {
                         PropertyNameCaseInsensitive = true,
                         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
                     };
@@ -130,6 +94,7 @@ Teks: {text}";
                 }
             }
         }
+
         return new Customer();
     }
 
@@ -137,36 +102,71 @@ Teks: {text}";
     {
         // Use /v1/agent/generate
         var info = JsonSerializer.Serialize(measurements);
-        var prompt = $"Validasi ukuran badan ini untuk penjahit. Jika ada angka yang sangat tidak masuk akal (misal Lingkar Pinggang 200cm), beri peringatan singkat. Jika wajar, jawab 'OK'. Data: {info}";
+        var prompt =
+            $"Validasi ukuran badan ini untuk penjahit. Jika ada angka yang sangat tidak masuk akal (misal Lingkar Pinggang 200cm), beri peringatan singkat. Jika wajar, jawab 'OK'. Data: {info}";
 
-        var body = new { prompt = prompt };
-        
+        var body = new { prompt };
+
         try
         {
-             var request = new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/v1/agent/generate");
-             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
-             request.Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/v1/agent/generate");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+            request.Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
 
-             using var response = await httpClient.SendAsync(request);
-             response.EnsureSuccessStatusCode();
-             var content = await response.Content.ReadAsStringAsync();
+            using var response = await httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync();
 
-             try 
-             {
-                 using var doc = JsonDocument.Parse(content);
-                 if (doc.RootElement.TryGetProperty("response", out var resp)) return resp.GetString();
-                 if (doc.RootElement.TryGetProperty("text", out var txt)) return txt.GetString();
-             }
-             catch
-             {
-                 return content;
-             }
-             return content;
+            try
+            {
+                using var doc = JsonDocument.Parse(content);
+                if (doc.RootElement.TryGetProperty("response", out var resp)) return resp.GetString();
+                if (doc.RootElement.TryGetProperty("text", out var txt)) return txt.GetString();
+            }
+            catch
+            {
+                return content;
+            }
+
+            return content;
         }
         catch
         {
             return null;
         }
+    }
+
+    private async Task<T> SendRequestAsync<T>(HttpMethod method, string endpoint, object? body = null,
+        MultipartFormDataContent? multipartContent = null)
+    {
+        var request = new HttpRequestMessage(method, $"{_baseUrl}{endpoint}");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+
+        if (multipartContent != null)
+        {
+            request.Content = multipartContent;
+        }
+        else if (body != null)
+        {
+            var json = JsonSerializer.Serialize(body);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+        }
+
+        using var response = await httpClient.SendAsync(request);
+
+        // Log error if failed
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"API Error {response.StatusCode}: {error}");
+        }
+
+        var content = await response.Content.ReadAsStringAsync();
+        if (typeof(T) == typeof(string)) return (T)(object)content;
+
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        return JsonSerializer.Deserialize<T>(content, options) ??
+               throw new InvalidOperationException("Response was null");
     }
 
     private string GetContentType(string fileName)

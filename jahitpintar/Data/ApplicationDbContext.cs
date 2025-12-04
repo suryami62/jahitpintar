@@ -1,6 +1,6 @@
+using jahitpintar.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using jahitpintar.Models;
 
 namespace jahitpintar.Data;
 
@@ -16,17 +16,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<Customer>(entity =>
         {
             entity.HasKey(e => e.Id);
-            
+
             // Link to User
             entity.HasOne<ApplicationUser>()
-                  .WithMany()
-                  .HasForeignKey(e => e.UserId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Owned Types mapping (flattens structure into table)
             entity.OwnsOne(e => e.Identity);
-            
-            entity.OwnsOne(e => e.Measurements, m => 
+
+            entity.OwnsOne(e => e.Measurements, m =>
             {
                 m.OwnsOne(u => u.Upper);
                 m.OwnsOne(l => l.Lower);

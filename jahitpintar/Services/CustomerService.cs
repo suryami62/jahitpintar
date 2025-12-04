@@ -38,9 +38,7 @@ public class CustomerService(IDbContextFactory<ApplicationDbContext> factory) : 
         else
         {
             if (existing.UserId != userId)
-            {
                 throw new UnauthorizedAccessException("Access denied to this customer record.");
-            }
 
             customer.UserId = userId; // Ensure UserId is set correctly
             context.Customers.Update(customer);

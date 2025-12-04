@@ -1,9 +1,9 @@
 @page "/customers"
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Identity
 @using jahitpintar.Data
 @using jahitpintar.Models
 @using jahitpintar.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
 @attribute [Authorize]
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> UserManager
@@ -42,32 +42,32 @@ else
     <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead class="table-light">
+            <tr>
+                <th>Nama</th>
+                <th>Kontak</th>
+                <th>Alamat</th>
+                <th>Aksi</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var customer in customers)
+            {
                 <tr>
-                                            <th>Nama</th>
-                                            <th>Kontak</th>
-                                            <th>Alamat</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach (var customer in customers)
-                                    {
-                                        <tr>
-                                            <td>@customer.Identity.Name</td>
-                                            <td>
-                                                <div>@customer.Identity.PhoneNumber</div>
-                                                <div class="d-flex gap-1 mt-1">
-                                                    @foreach (var platform in customer.Identity.SocialMediaPlatforms)
-                                                    {
-                                                        <span class="badge bg-info text-dark" style="font-size: 0.7em;">@platform</span>
-                                                    }
-                                                </div>
-                                            </td>
-                                            <td>@customer.Identity.Address</td>
-                                            <td>
-                                                <a href="/customers/edit/@customer.Id" class="btn btn-sm btn-warning">Edit</a>                        </td>
-                    </tr>
-                }
+                    <td>@customer.Identity.Name</td>
+                    <td>
+                        <div>@customer.Identity.PhoneNumber</div>
+                        <div class="d-flex gap-1 mt-1">
+                            @foreach (var platform in customer.Identity.SocialMediaPlatforms)
+                            {
+                                <span class="badge bg-info text-dark" style="font-size: 0.7em;">@platform</span>
+                            }
+                        </div>
+                    </td>
+                    <td>@customer.Identity.Address</td>
+                    <td>
+                        <a href="/customers/edit/@customer.Id" class="btn btn-sm btn-warning">Edit</a></td>
+                </tr>
+            }
             </tbody>
         </table>
     </div>
@@ -84,7 +84,7 @@ else
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var principal = authState.User;
-            
+
             if (principal.Identity?.IsAuthenticated == true)
             {
                 user = await UserManager.GetUserAsync(principal);
@@ -104,4 +104,5 @@ else
             isLoading = false;
         }
     }
+
 }
