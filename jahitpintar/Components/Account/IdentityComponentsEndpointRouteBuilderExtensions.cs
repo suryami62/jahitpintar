@@ -1,3 +1,5 @@
+#region
+
 using System.Security.Claims;
 using System.Text.Json;
 using jahitpintar.Components.Account.Pages;
@@ -10,6 +12,8 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+
+#endregion
 
 namespace Microsoft.AspNetCore.Routing;
 

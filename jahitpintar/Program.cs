@@ -1,3 +1,5 @@
+#region
+
 using jahitpintar.Components;
 using jahitpintar.Components.Account;
 using jahitpintar.Data;
@@ -5,6 +7,8 @@ using jahitpintar.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
+#endregion
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -52,7 +52,7 @@ customElements.define('passkey-submit', class extends HTMLElement {
             requestTokenValue: this.getAttribute('request-token-value'),
         };
 
-        this.internals.form.addEventListener('submit', (event) => {
+        this.internals.form.addEventListener('submit', event => {
             if (event.submitter?.name === '__passkeySubmit') {
                 event.preventDefault();
                 this.obtainAndSubmitCredential();
