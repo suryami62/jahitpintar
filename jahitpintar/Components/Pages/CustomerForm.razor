@@ -12,6 +12,7 @@
 @inject ICustomerService CustomerService
 @inject IOcrService OcrService
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 @rendermode InteractiveServer
 
 <PageTitle>@(string.IsNullOrEmpty(Id) ? "Tambah Pelanggan" : "Edit Pelanggan")</PageTitle>
@@ -240,6 +241,12 @@
             </div>
 
             <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
+                @if (!string.IsNullOrEmpty(Id))
+                {
+                    <button type="button" class="btn btn-outline-danger btn-lg me-md-2" @onclick="DeleteCustomer" disabled="@_isSaving">
+                        Hapus
+                    </button>
+                }
                 <button type="submit" class="btn btn-primary btn-lg" disabled="@_isSaving">
                     @(_isSaving ? "Menyimpan..." : "Simpan Data Pelanggan")
                 </button>
@@ -447,6 +454,29 @@
         }
 
         StateHasChanged();
+    }
+
+    private async Task DeleteCustomer()
+    {
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", "Apakah Anda yakin ingin menghapus data pelanggan ini?"))
+        {
+            return;
+        }
+
+        _isSaving = true;
+        try
+        {
+            if (!string.IsNullOrEmpty(Id))
+            {
+                await CustomerService.DeleteCustomerAsync(Id);
+                NavigationManager.NavigateTo("/customers");
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Gagal menghapus: {ex.Message}";
+            _isSaving = false;
+        }
     }
 
     private async Task SaveCustomer()
