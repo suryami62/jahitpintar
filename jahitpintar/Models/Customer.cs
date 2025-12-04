@@ -7,6 +7,7 @@ public class Customer
     public IdentityInfo Identity { get; init; } = new();
     public Measurements Measurements { get; init; } = new();
     public Preferences Preferences { get; init; } = new();
+    public string AdditionalNotes { get; set; } = string.Empty;
 }
 
 public class IdentityInfo

@@ -59,9 +59,10 @@ public class KolosalService(HttpClient httpClient, IConfiguration configuration)
     ""height"": 0,
     ""weight"": 0
   }},
-  ""preferences"": {{ ""fitting_style"": """", ""fabric_favorite"": """", ""order_history"": [] }}
+  ""additional_notes"": """"
 }}
 For 'social_media_platforms', detect context (e.g. 'WA: 0812' -> ['WhatsApp']).
+Semua informasi lain yang tidak masuk ke identity dan measurements (seperti jenis kain, model, riwayat, request khusus) masukkan ke dalam field 'additional_notes'.
 Only return the JSON. No markdown.
 Teks: {text}";
 
