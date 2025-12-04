@@ -168,20 +168,32 @@
                     <h6 class="text-primary mt-3">Bawahan (Lower Body)</h6>
                     <div class="row">
                         <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Pinggang</label>
+                            <label class="form-label">Lingkar Pinggang Celana / Rok</label>
                             <InputNumber @bind-Value="customer.Measurements.Lower.WaistCircumference" class="form-control" />
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Pinggul</label>
-                            <InputNumber @bind-Value="customer.Measurements.Lower.HipCircumference" class="form-control" />
+                            <label class="form-label">Lingkar Pesak</label>
+                            <InputNumber @bind-Value="customer.Measurements.Lower.CrotchCircumference" class="form-control" />
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label class="form-label">Panjang Celana/Rok</label>
-                            <InputNumber @bind-Value="customer.Measurements.Lower.LegLength" class="form-control" />
-                        </div>
-                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Paha</label>
                             <InputNumber @bind-Value="customer.Measurements.Lower.ThighCircumference" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Lingkar Lutut</label>
+                            <InputNumber @bind-Value="customer.Measurements.Lower.KneeCircumference" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Lingkar Kaki</label>
+                            <InputNumber @bind-Value="customer.Measurements.Lower.AnkleCircumference" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Panjang Celana / Rok</label>
+                            <InputNumber @bind-Value="customer.Measurements.Lower.PantsLength" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label">Tinggi Duduk</label>
+                            <InputNumber @bind-Value="customer.Measurements.Lower.SeatedHeight" class="form-control" />
                         </div>
                     </div>
 
@@ -408,6 +420,11 @@
         if (extracted.Measurements.Lower.HipCircumference > 0) customer.Measurements.Lower.HipCircumference = extracted.Measurements.Lower.HipCircumference;
         if (extracted.Measurements.Lower.LegLength > 0) customer.Measurements.Lower.LegLength = extracted.Measurements.Lower.LegLength;
         if (extracted.Measurements.Lower.ThighCircumference > 0) customer.Measurements.Lower.ThighCircumference = extracted.Measurements.Lower.ThighCircumference;
+        if (extracted.Measurements.Lower.CrotchCircumference > 0) customer.Measurements.Lower.CrotchCircumference = extracted.Measurements.Lower.CrotchCircumference;
+        if (extracted.Measurements.Lower.KneeCircumference > 0) customer.Measurements.Lower.KneeCircumference = extracted.Measurements.Lower.KneeCircumference;
+        if (extracted.Measurements.Lower.AnkleCircumference > 0) customer.Measurements.Lower.AnkleCircumference = extracted.Measurements.Lower.AnkleCircumference;
+        if (extracted.Measurements.Lower.PantsLength > 0) customer.Measurements.Lower.PantsLength = extracted.Measurements.Lower.PantsLength;
+        if (extracted.Measurements.Lower.SeatedHeight > 0) customer.Measurements.Lower.SeatedHeight = extracted.Measurements.Lower.SeatedHeight;
         
         // General
         if (extracted.Measurements.Height > 0) customer.Measurements.Height = extracted.Measurements.Height;

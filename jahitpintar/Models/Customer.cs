@@ -47,7 +47,12 @@ public class LowerBody
     public double WaistCircumference { get; set; } 
     public double HipCircumference { get; set; } 
     public double LegLength { get; set; } 
-    public double ThighCircumference { get; set; } 
+    public double ThighCircumference { get; set; }
+    public double CrotchCircumference { get; set; }
+    public double KneeCircumference { get; set; }
+    public double AnkleCircumference { get; set; }
+    public double PantsLength { get; set; }
+    public double SeatedHeight { get; set; }
 }
 
 public class Preferences
