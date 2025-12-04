@@ -10,11 +10,11 @@ using jahitpintar.Data;
 
 #nullable disable
 
-namespace jahitpintar.Migrations
+namespace jahitpintar.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251204091339_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251204101911_InitIdentity")]
+    partial class InitIdentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -231,9 +231,6 @@ namespace jahitpintar.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
-
-                    b.Property<string>("WorkspaceId")
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace jahitpintar.Migrations
+namespace jahitpintar.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitIdentity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
