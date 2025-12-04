@@ -2,6 +2,7 @@
 @using jahitpintar.Data
 @using jahitpintar.Models
 @using jahitpintar.Services
+@using jahitpintar.Components.Chat
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @attribute [Authorize]
@@ -211,6 +212,8 @@
             </a>
         </div>
     }
+
+    <AiChatAssistant Customer="@_customer" />
 </div>
 
 @code {

@@ -103,6 +103,25 @@ Teks: {text}";
         return new Customer();
     }
 
+    public async Task<string> ChatWithAiAsync(List<ChatMessage> messages)
+    {
+        var body = new
+        {
+            model = "MiniMax M2",
+            messages = messages.Select(m => new { role = m.Role, content = m.Content }).ToArray()
+        };
+
+        var response = await SendRequestAsync<JsonElement>(HttpMethod.Post, "/v1/chat/completions", body);
+
+        if (response.TryGetProperty("choices", out var choices) && choices.GetArrayLength() > 0)
+        {
+            var content = choices[0].GetProperty("message").GetProperty("content").GetString();
+            return content ?? string.Empty;
+        }
+
+        return string.Empty;
+    }
+
     public async Task<string?> ValidateMeasurementsAsync(Measurements measurements)
     {
         // Use /v1/agent/generate
