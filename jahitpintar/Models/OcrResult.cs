@@ -8,17 +8,17 @@ namespace jahitpintar.Models;
 
 public class OcrResult
 {
-    [JsonPropertyName("title")] public string? Title { get; set; }
+    [JsonPropertyName("title")] public string? Title { get; init; }
 
-    [JsonPropertyName("date")] public string? Date { get; set; }
+    [JsonPropertyName("date")] public string? Date { get; init; }
 
-    [JsonPropertyName("content")] public List<OcrContentItem> Content { get; set; } = new();
+    [JsonPropertyName("content")] public List<OcrContentItem> Content { get; init; } = new();
 
-    [JsonPropertyName("notes")] public string? Notes { get; set; }
+    [JsonPropertyName("notes")] public string? Notes { get; init; }
 
-    [JsonPropertyName("confidence_score")] public double ConfidenceScore { get; set; }
+    [JsonPropertyName("confidence_score")] public double ConfidenceScore { get; init; }
 
-    [JsonPropertyName("extracted_text")] public string? ExtractedText { get; set; }
+    [JsonPropertyName("extracted_text")] public string? ExtractedText { get; init; }
 }
 
 public class OcrContentItem

@@ -22,7 +22,7 @@
         <a href="/customers" class="btn btn-outline-secondary">Kembali</a>
     </div>
 
-    @if (isLoading)
+    @if (_isLoading)
     {
         <div class="d-flex justify-content-center">
             <div class="spinner-border" role="status">
@@ -30,9 +30,9 @@
             </div>
         </div>
     }
-    else if (errorMessage != null)
+    else if (_errorMessage != null)
     {
-        <div class="alert alert-danger">@errorMessage</div>
+        <div class="alert alert-danger">@_errorMessage</div>
     }
     else
     {
@@ -47,7 +47,7 @@
                         <h5><i class="bi bi-camera"></i> Scan Catatan Lama</h5>
                         <p class="text-muted small">Upload foto catatan tangan ukuran pelanggan.</p>
                         <InputFile OnChange="HandleFileUpload" accept=".jpg,.jpeg,.png,.pdf" class="form-control"/>
-                        @if (isOcrProcessing)
+                        @if (_isOcrProcessing)
                         {
                             <div class="mt-2 text-primary">Sedang memproses gambar...</div>
                         }
@@ -57,11 +57,11 @@
                         <p class="text-muted small">Ketik data pelanggan secara natural (contoh: "Pak Budi, LD 100,
                             Alamat Kemang").</p>
                         <div class="input-group">
-                            <textarea @bind="chatInput" class="form-control" placeholder="Ketik di sini..."
+                            <textarea @bind="_chatInput" class="form-control" placeholder="Ketik di sini..."
                                       rows="2"></textarea>
                             <button class="btn btn-outline-primary" @onclick="ProcessChatInput"
-                                    disabled="@isChatProcessing">
-                                @(isChatProcessing ? "..." : "Proses")
+                                    disabled="@_isChatProcessing">
+                                @(_isChatProcessing ? "..." : "Proses")
                             </button>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <EditForm Model="customer" OnValidSubmit="SaveCustomer">
+        <EditForm Model="_customer" OnValidSubmit="SaveCustomer">
             <DataAnnotationsValidator/>
             <!-- Identity Section -->
             <div class="card mb-3">
@@ -78,11 +78,11 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Nama Lengkap</label>
-                            <InputText @bind-Value="customer.Identity.Name" class="form-control"/>
+                            <InputText @bind-Value="_customer.Identity.Name" class="form-control"/>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Nomor Handphone</label>
-                            <InputText @bind-Value="customer.Identity.PhoneNumber" class="form-control"
+                            <InputText @bind-Value="_customer.Identity.PhoneNumber" class="form-control"
                                        placeholder="Contoh: 08123456789"/>
                             <div class="mt-2">
                                 <label class="form-label small text-muted">Sosial Media (Centang jika aktif):</label>
@@ -91,7 +91,7 @@
                                     {
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"
-                                                   checked="@customer.Identity.SocialMediaPlatforms.Contains(platform)"
+                                                   checked="@_customer.Identity.SocialMediaPlatforms.Contains(platform)"
                                                    @onchange="@(e => ToggleSocialMedia(platform, e))"/>
                                             <label class="form-check-label">@platform</label>
                                         </div>
@@ -101,7 +101,7 @@
                         </div>
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Alamat Lengkap</label>
-                            <InputTextArea @bind-Value="customer.Identity.Address" class="form-control" rows="2"/>
+                            <InputTextArea @bind-Value="_customer.Identity.Address" class="form-control" rows="2"/>
                         </div>
                     </div>
                 </div>
@@ -117,62 +117,62 @@
                     <div class="row">
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Dada (LD)</label>
-                            <InputNumber @bind-Value="customer.Measurements.Upper.ChestCircumference"
+                            <InputNumber @bind-Value="_customer.Measurements.Upper.ChestCircumference"
                                          class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Pinggang</label>
-                            <InputNumber @bind-Value="customer.Measurements.Upper.WaistCircumference"
+                            <InputNumber @bind-Value="_customer.Measurements.Upper.WaistCircumference"
                                          class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Pinggul</label>
-                            <InputNumber @bind-Value="customer.Measurements.Upper.HipCircumference"
+                            <InputNumber @bind-Value="_customer.Measurements.Upper.HipCircumference"
                                          class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Leher</label>
-                            <InputNumber @bind-Value="customer.Measurements.Upper.NeckCircumference"
+                            <InputNumber @bind-Value="_customer.Measurements.Upper.NeckCircumference"
                                          class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lebar Bahu</label>
-                            <InputNumber @bind-Value="customer.Measurements.Upper.ShoulderWidth" class="form-control"/>
+                            <InputNumber @bind-Value="_customer.Measurements.Upper.ShoulderWidth" class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Panjang Lengan</label>
-                            <InputNumber @bind-Value="customer.Measurements.Upper.SleeveLength" class="form-control"/>
+                            <InputNumber @bind-Value="_customer.Measurements.Upper.SleeveLength" class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Kerung Lengan</label>
-                            <InputNumber @bind-Value="customer.Measurements.Upper.ArmholeCircumference"
+                            <InputNumber @bind-Value="_customer.Measurements.Upper.ArmholeCircumference"
                                          class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Lengan</label>
-                            <InputNumber @bind-Value="customer.Measurements.Upper.ArmCircumference"
+                            <InputNumber @bind-Value="_customer.Measurements.Upper.ArmCircumference"
                                          class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Pergelangan</label>
-                            <InputNumber @bind-Value="customer.Measurements.Upper.WristCircumference"
+                            <InputNumber @bind-Value="_customer.Measurements.Upper.WristCircumference"
                                          class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lebar Muka</label>
-                            <InputNumber @bind-Value="customer.Measurements.Upper.FrontWidth" class="form-control"/>
+                            <InputNumber @bind-Value="_customer.Measurements.Upper.FrontWidth" class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lebar Punggung</label>
-                            <InputNumber @bind-Value="customer.Measurements.Upper.BackWidth" class="form-control"/>
+                            <InputNumber @bind-Value="_customer.Measurements.Upper.BackWidth" class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Tinggi Pinggul</label>
-                            <InputNumber @bind-Value="customer.Measurements.Upper.HipHeight" class="form-control"/>
+                            <InputNumber @bind-Value="_customer.Measurements.Upper.HipHeight" class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Panjang Baju</label>
-                            <InputNumber @bind-Value="customer.Measurements.Upper.ShirtLength" class="form-control"/>
+                            <InputNumber @bind-Value="_customer.Measurements.Upper.ShirtLength" class="form-control"/>
                         </div>
                     </div>
 
@@ -180,36 +180,36 @@
                     <div class="row">
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Pinggang Celana / Rok</label>
-                            <InputNumber @bind-Value="customer.Measurements.Lower.WaistCircumference"
+                            <InputNumber @bind-Value="_customer.Measurements.Lower.WaistCircumference"
                                          class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Pesak</label>
-                            <InputNumber @bind-Value="customer.Measurements.Lower.CrotchCircumference"
+                            <InputNumber @bind-Value="_customer.Measurements.Lower.CrotchCircumference"
                                          class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Paha</label>
-                            <InputNumber @bind-Value="customer.Measurements.Lower.ThighCircumference"
+                            <InputNumber @bind-Value="_customer.Measurements.Lower.ThighCircumference"
                                          class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Lutut</label>
-                            <InputNumber @bind-Value="customer.Measurements.Lower.KneeCircumference"
+                            <InputNumber @bind-Value="_customer.Measurements.Lower.KneeCircumference"
                                          class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Lingkar Kaki</label>
-                            <InputNumber @bind-Value="customer.Measurements.Lower.AnkleCircumference"
+                            <InputNumber @bind-Value="_customer.Measurements.Lower.AnkleCircumference"
                                          class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Panjang Celana / Rok</label>
-                            <InputNumber @bind-Value="customer.Measurements.Lower.PantsLength" class="form-control"/>
+                            <InputNumber @bind-Value="_customer.Measurements.Lower.PantsLength" class="form-control"/>
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label">Tinggi Duduk</label>
-                            <InputNumber @bind-Value="customer.Measurements.Lower.SeatedHeight" class="form-control"/>
+                            <InputNumber @bind-Value="_customer.Measurements.Lower.SeatedHeight" class="form-control"/>
                         </div>
                     </div>
 
@@ -217,11 +217,11 @@
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <label class="form-label">Tinggi Badan (cm)</label>
-                            <InputNumber @bind-Value="customer.Measurements.Height" class="form-control"/>
+                            <InputNumber @bind-Value="_customer.Measurements.Height" class="form-control"/>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label class="form-label">Berat Badan (kg)</label>
-                            <InputNumber @bind-Value="customer.Measurements.Weight" class="form-control"/>
+                            <InputNumber @bind-Value="_customer.Measurements.Weight" class="form-control"/>
                         </div>
                     </div>
                 </div>
@@ -234,7 +234,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Preferensi Fitting</label>
-                            <InputSelect @bind-Value="customer.Preferences.FittingStyle" class="form-control">
+                            <InputSelect @bind-Value="_customer.Preferences.FittingStyle" class="form-control">
                                 <option value="Slim Fit">Slim Fit</option>
                                 <option value="Regular">Regular</option>
                                 <option value="Loose">Loose (Longgar/Syar'i)</option>
@@ -242,20 +242,20 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Jenis Kain Favorit</label>
-                            <InputText @bind-Value="customer.Preferences.FabricFavorite" class="form-control"/>
+                            <InputText @bind-Value="_customer.Preferences.FabricFavorite" class="form-control"/>
                         </div>
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Riwayat Pesanan (Manual)</label>
                             <textarea class="form-control" rows="2" placeholder="Gamis, Kemeja Batik..."
-                                      @onchange="UpdateHistory">@string.Join(", ", customer.Preferences.OrderHistory)</textarea>
+                                      @onchange="UpdateHistory">@string.Join(", ", _customer.Preferences.OrderHistory)</textarea>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
-                <button type="submit" class="btn btn-primary btn-lg" disabled="@isSaving">
-                    @(isSaving ? "Menyimpan..." : "Simpan Data Pelanggan")
+                <button type="submit" class="btn btn-primary btn-lg" disabled="@_isSaving">
+                    @(_isSaving ? "Menyimpan..." : "Simpan Data Pelanggan")
                 </button>
             </div>
         </EditForm>
@@ -265,15 +265,15 @@
 @code {
     [Parameter] public string? Id { get; set; }
 
-    private Customer customer = new();
-    private ApplicationUser? user;
+    private Customer _customer = new();
+    private ApplicationUser? _user;
 
-    private bool isLoading = true;
-    private bool isSaving;
-    private bool isOcrProcessing;
-    private bool isChatProcessing;
-    private string? errorMessage;
-    private string chatInput = "";
+    private bool _isLoading = true;
+    private bool _isSaving;
+    private bool _isOcrProcessing;
+    private bool _isChatProcessing;
+    private string? _errorMessage;
+    private string _chatInput = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -284,52 +284,52 @@
 
             if (principal.Identity?.IsAuthenticated == true)
             {
-                user = await UserManager.GetUserAsync(principal);
-                if (user != null)
+                _user = await UserManager.GetUserAsync(principal);
+                if (_user != null)
                 {
                     if (!string.IsNullOrEmpty(Id))
                     {
                         var found = await CustomerService.GetCustomerByIdAsync(Id);
                         if (found != null)
                         {
-                            if (found.UserId != user.Id && !string.IsNullOrEmpty(found.UserId))
+                            if (found.UserId != _user.Id && !string.IsNullOrEmpty(found.UserId))
                             {
-                                errorMessage = "Unauthorized access.";
+                                _errorMessage = "Unauthorized access.";
                             }
                             else
                             {
-                                customer = found;
+                                _customer = found;
                             }
                         }
                         else
                         {
-                            errorMessage = "Pelanggan tidak ditemukan.";
+                            _errorMessage = "Pelanggan tidak ditemukan.";
                         }
                     }
                 }
                 else
                 {
-                    errorMessage = "User tidak ditemukan.";
+                    _errorMessage = "User tidak ditemukan.";
                 }
             }
             else
             {
-                errorMessage = "Anda harus login.";
+                _errorMessage = "Anda harus login.";
             }
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error: {ex.Message}";
+            _errorMessage = $"Error: {ex.Message}";
         }
         finally
         {
-            isLoading = false;
+            _isLoading = false;
         }
     }
 
     private async Task HandleFileUpload(InputFileChangeEventArgs e)
     {
-        isOcrProcessing = true;
+        _isOcrProcessing = true;
         try
         {
             var file = e.File;
@@ -352,32 +352,32 @@
         }
         catch (Exception ex)
         {
-            errorMessage = $"OCR Failed: {ex.Message}";
+            _errorMessage = $"OCR Failed: {ex.Message}";
         }
         finally
         {
-            isOcrProcessing = false;
+            _isOcrProcessing = false;
         }
     }
 
     private async Task ProcessChatInput()
     {
-        if (string.IsNullOrWhiteSpace(chatInput)) return;
+        if (string.IsNullOrWhiteSpace(_chatInput)) return;
 
-        isChatProcessing = true;
+        _isChatProcessing = true;
         try
         {
-            var extractedData = await KolosalService.ExtractCustomerFromTextAsync(chatInput);
+            var extractedData = await KolosalService.ExtractCustomerFromTextAsync(_chatInput);
             MergeCustomerData(extractedData);
-            chatInput = ""; // Clear input
+            _chatInput = ""; // Clear input
         }
         catch (Exception ex)
         {
-            errorMessage = $"AI Processing Failed: {ex.Message}";
+            _errorMessage = $"AI Processing Failed: {ex.Message}";
         }
         finally
         {
-            isChatProcessing = false;
+            _isChatProcessing = false;
         }
     }
 
@@ -386,78 +386,78 @@
         var isChecked = (bool)(e.Value ?? false);
         if (isChecked)
         {
-            if (!customer.Identity.SocialMediaPlatforms.Contains(platform))
+            if (!_customer.Identity.SocialMediaPlatforms.Contains(platform))
             {
-                customer.Identity.SocialMediaPlatforms.Add(platform);
+                _customer.Identity.SocialMediaPlatforms.Add(platform);
             }
         }
         else
         {
-            customer.Identity.SocialMediaPlatforms.Remove(platform);
+            _customer.Identity.SocialMediaPlatforms.Remove(platform);
         }
     }
 
     private void MergeCustomerData(Customer extracted)
     {
         // intelligently merge non-null/non-default values
-        if (!string.IsNullOrEmpty(extracted.Identity.Name)) customer.Identity.Name = extracted.Identity.Name;
-        if (!string.IsNullOrEmpty(extracted.Identity.Address)) customer.Identity.Address = extracted.Identity.Address;
-        if (!string.IsNullOrEmpty(extracted.Identity.PhoneNumber)) customer.Identity.PhoneNumber = extracted.Identity.PhoneNumber;
+        if (!string.IsNullOrEmpty(extracted.Identity.Name)) _customer.Identity.Name = extracted.Identity.Name;
+        if (!string.IsNullOrEmpty(extracted.Identity.Address)) _customer.Identity.Address = extracted.Identity.Address;
+        if (!string.IsNullOrEmpty(extracted.Identity.PhoneNumber)) _customer.Identity.PhoneNumber = extracted.Identity.PhoneNumber;
 
         // Merge Social Media
         if (extracted.Identity.SocialMediaPlatforms.Any())
         {
             foreach (var platform in extracted.Identity.SocialMediaPlatforms)
             {
-                if (!customer.Identity.SocialMediaPlatforms.Contains(platform))
+                if (!_customer.Identity.SocialMediaPlatforms.Contains(platform))
                 {
-                    customer.Identity.SocialMediaPlatforms.Add(platform);
+                    _customer.Identity.SocialMediaPlatforms.Add(platform);
                 }
             }
         }
 
         // Measurements
         // Upper
-        if (extracted.Measurements.Upper.ChestCircumference > 0) customer.Measurements.Upper.ChestCircumference = extracted.Measurements.Upper.ChestCircumference;
-        if (extracted.Measurements.Upper.WaistCircumference > 0) customer.Measurements.Upper.WaistCircumference = extracted.Measurements.Upper.WaistCircumference;
-        if (extracted.Measurements.Upper.HipCircumference > 0) customer.Measurements.Upper.HipCircumference = extracted.Measurements.Upper.HipCircumference;
-        if (extracted.Measurements.Upper.NeckCircumference > 0) customer.Measurements.Upper.NeckCircumference = extracted.Measurements.Upper.NeckCircumference;
-        if (extracted.Measurements.Upper.ShoulderWidth > 0) customer.Measurements.Upper.ShoulderWidth = extracted.Measurements.Upper.ShoulderWidth;
-        if (extracted.Measurements.Upper.SleeveLength > 0) customer.Measurements.Upper.SleeveLength = extracted.Measurements.Upper.SleeveLength;
-        if (extracted.Measurements.Upper.ArmholeCircumference > 0) customer.Measurements.Upper.ArmholeCircumference = extracted.Measurements.Upper.ArmholeCircumference;
-        if (extracted.Measurements.Upper.ArmCircumference > 0) customer.Measurements.Upper.ArmCircumference = extracted.Measurements.Upper.ArmCircumference;
-        if (extracted.Measurements.Upper.WristCircumference > 0) customer.Measurements.Upper.WristCircumference = extracted.Measurements.Upper.WristCircumference;
-        if (extracted.Measurements.Upper.FrontWidth > 0) customer.Measurements.Upper.FrontWidth = extracted.Measurements.Upper.FrontWidth;
-        if (extracted.Measurements.Upper.BackWidth > 0) customer.Measurements.Upper.BackWidth = extracted.Measurements.Upper.BackWidth;
-        if (extracted.Measurements.Upper.HipHeight > 0) customer.Measurements.Upper.HipHeight = extracted.Measurements.Upper.HipHeight;
-        if (extracted.Measurements.Upper.ShirtLength > 0) customer.Measurements.Upper.ShirtLength = extracted.Measurements.Upper.ShirtLength;
+        if (extracted.Measurements.Upper.ChestCircumference > 0) _customer.Measurements.Upper.ChestCircumference = extracted.Measurements.Upper.ChestCircumference;
+        if (extracted.Measurements.Upper.WaistCircumference > 0) _customer.Measurements.Upper.WaistCircumference = extracted.Measurements.Upper.WaistCircumference;
+        if (extracted.Measurements.Upper.HipCircumference > 0) _customer.Measurements.Upper.HipCircumference = extracted.Measurements.Upper.HipCircumference;
+        if (extracted.Measurements.Upper.NeckCircumference > 0) _customer.Measurements.Upper.NeckCircumference = extracted.Measurements.Upper.NeckCircumference;
+        if (extracted.Measurements.Upper.ShoulderWidth > 0) _customer.Measurements.Upper.ShoulderWidth = extracted.Measurements.Upper.ShoulderWidth;
+        if (extracted.Measurements.Upper.SleeveLength > 0) _customer.Measurements.Upper.SleeveLength = extracted.Measurements.Upper.SleeveLength;
+        if (extracted.Measurements.Upper.ArmholeCircumference > 0) _customer.Measurements.Upper.ArmholeCircumference = extracted.Measurements.Upper.ArmholeCircumference;
+        if (extracted.Measurements.Upper.ArmCircumference > 0) _customer.Measurements.Upper.ArmCircumference = extracted.Measurements.Upper.ArmCircumference;
+        if (extracted.Measurements.Upper.WristCircumference > 0) _customer.Measurements.Upper.WristCircumference = extracted.Measurements.Upper.WristCircumference;
+        if (extracted.Measurements.Upper.FrontWidth > 0) _customer.Measurements.Upper.FrontWidth = extracted.Measurements.Upper.FrontWidth;
+        if (extracted.Measurements.Upper.BackWidth > 0) _customer.Measurements.Upper.BackWidth = extracted.Measurements.Upper.BackWidth;
+        if (extracted.Measurements.Upper.HipHeight > 0) _customer.Measurements.Upper.HipHeight = extracted.Measurements.Upper.HipHeight;
+        if (extracted.Measurements.Upper.ShirtLength > 0) _customer.Measurements.Upper.ShirtLength = extracted.Measurements.Upper.ShirtLength;
 
         // Lower
-        if (extracted.Measurements.Lower.WaistCircumference > 0) customer.Measurements.Lower.WaistCircumference = extracted.Measurements.Lower.WaistCircumference;
-        if (extracted.Measurements.Lower.HipCircumference > 0) customer.Measurements.Lower.HipCircumference = extracted.Measurements.Lower.HipCircumference;
-        if (extracted.Measurements.Lower.LegLength > 0) customer.Measurements.Lower.LegLength = extracted.Measurements.Lower.LegLength;
-        if (extracted.Measurements.Lower.ThighCircumference > 0) customer.Measurements.Lower.ThighCircumference = extracted.Measurements.Lower.ThighCircumference;
-        if (extracted.Measurements.Lower.CrotchCircumference > 0) customer.Measurements.Lower.CrotchCircumference = extracted.Measurements.Lower.CrotchCircumference;
-        if (extracted.Measurements.Lower.KneeCircumference > 0) customer.Measurements.Lower.KneeCircumference = extracted.Measurements.Lower.KneeCircumference;
-        if (extracted.Measurements.Lower.AnkleCircumference > 0) customer.Measurements.Lower.AnkleCircumference = extracted.Measurements.Lower.AnkleCircumference;
-        if (extracted.Measurements.Lower.PantsLength > 0) customer.Measurements.Lower.PantsLength = extracted.Measurements.Lower.PantsLength;
-        if (extracted.Measurements.Lower.SeatedHeight > 0) customer.Measurements.Lower.SeatedHeight = extracted.Measurements.Lower.SeatedHeight;
+        if (extracted.Measurements.Lower.WaistCircumference > 0) _customer.Measurements.Lower.WaistCircumference = extracted.Measurements.Lower.WaistCircumference;
+        if (extracted.Measurements.Lower.HipCircumference > 0) _customer.Measurements.Lower.HipCircumference = extracted.Measurements.Lower.HipCircumference;
+        if (extracted.Measurements.Lower.LegLength > 0) _customer.Measurements.Lower.LegLength = extracted.Measurements.Lower.LegLength;
+        if (extracted.Measurements.Lower.ThighCircumference > 0) _customer.Measurements.Lower.ThighCircumference = extracted.Measurements.Lower.ThighCircumference;
+        if (extracted.Measurements.Lower.CrotchCircumference > 0) _customer.Measurements.Lower.CrotchCircumference = extracted.Measurements.Lower.CrotchCircumference;
+        if (extracted.Measurements.Lower.KneeCircumference > 0) _customer.Measurements.Lower.KneeCircumference = extracted.Measurements.Lower.KneeCircumference;
+        if (extracted.Measurements.Lower.AnkleCircumference > 0) _customer.Measurements.Lower.AnkleCircumference = extracted.Measurements.Lower.AnkleCircumference;
+        if (extracted.Measurements.Lower.PantsLength > 0) _customer.Measurements.Lower.PantsLength = extracted.Measurements.Lower.PantsLength;
+        if (extracted.Measurements.Lower.SeatedHeight > 0) _customer.Measurements.Lower.SeatedHeight = extracted.Measurements.Lower.SeatedHeight;
 
         // General
-        if (extracted.Measurements.Height > 0) customer.Measurements.Height = extracted.Measurements.Height;
-        if (extracted.Measurements.Weight > 0) customer.Measurements.Weight = extracted.Measurements.Weight;
+        if (extracted.Measurements.Height > 0) _customer.Measurements.Height = extracted.Measurements.Height;
+        if (extracted.Measurements.Weight > 0) _customer.Measurements.Weight = extracted.Measurements.Weight;
 
         // Preferences
-        if (!string.IsNullOrEmpty(extracted.Preferences.FittingStyle)) customer.Preferences.FittingStyle = extracted.Preferences.FittingStyle;
-        if (!string.IsNullOrEmpty(extracted.Preferences.FabricFavorite)) customer.Preferences.FabricFavorite = extracted.Preferences.FabricFavorite;
+        if (!string.IsNullOrEmpty(extracted.Preferences.FittingStyle)) _customer.Preferences.FittingStyle = extracted.Preferences.FittingStyle;
+        if (!string.IsNullOrEmpty(extracted.Preferences.FabricFavorite)) _customer.Preferences.FabricFavorite = extracted.Preferences.FabricFavorite;
 
         if (extracted.Preferences.OrderHistory.Any())
         {
             foreach (var history in extracted.Preferences.OrderHistory)
             {
-                if (!customer.Preferences.OrderHistory.Contains(history))
+                if (!_customer.Preferences.OrderHistory.Contains(history))
                 {
-                    customer.Preferences.OrderHistory.Add(history);
+                    _customer.Preferences.OrderHistory.Add(history);
                 }
             }
         }
@@ -470,27 +470,27 @@
         var val = e.Value?.ToString();
         if (val != null)
         {
-            customer.Preferences.OrderHistory = val.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToList();
+            _customer.Preferences.OrderHistory = val.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToList();
         }
     }
 
     private async Task SaveCustomer()
     {
-        if (user == null) return;
+        if (_user == null) return;
 
-        isSaving = true;
+        _isSaving = true;
         try
         {
-            await CustomerService.SaveCustomerAsync(customer, user.Id);
+            await CustomerService.SaveCustomerAsync(_customer, _user.Id);
             NavigationManager.NavigateTo("/customers");
         }
         catch (Exception ex)
         {
-            errorMessage = $"Failed to save: {ex.Message}";
+            _errorMessage = $"Failed to save: {ex.Message}";
         }
         finally
         {
-            isSaving = false;
+            _isSaving = false;
         }
     }
 

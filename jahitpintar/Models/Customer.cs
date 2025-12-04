@@ -2,11 +2,11 @@ namespace jahitpintar.Models;
 
 public class Customer
 {
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string Id { get; init; } = Guid.NewGuid().ToString();
     public string UserId { get; set; } = string.Empty;
-    public IdentityInfo Identity { get; set; } = new();
-    public Measurements Measurements { get; set; } = new();
-    public Preferences Preferences { get; set; } = new();
+    public IdentityInfo Identity { get; init; } = new();
+    public Measurements Measurements { get; init; } = new();
+    public Preferences Preferences { get; init; } = new();
 }
 
 public class IdentityInfo

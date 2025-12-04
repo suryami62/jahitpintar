@@ -19,7 +19,7 @@
     </a>
 </div>
 
-@if (isLoading)
+@if (_isLoading)
 {
     <div class="d-flex justify-content-center">
         <div class="spinner-border" role="status">
@@ -27,11 +27,11 @@
         </div>
     </div>
 }
-else if (user == null)
+else if (_user == null)
 {
     <p class="text-danger">Error: User not found.</p>
 }
-else if (customers == null || !customers.Any())
+else if (_customers == null || !_customers.Any())
 {
     <div class="alert alert-info">
         Belum ada data pelanggan. Mulai dengan menambahkan pelanggan baru!
@@ -50,7 +50,7 @@ else
             </tr>
             </thead>
             <tbody>
-            @foreach (var customer in customers)
+            @foreach (var customer in _customers)
             {
                 <tr>
                     <td>@customer.Identity.Name</td>
@@ -74,9 +74,9 @@ else
 }
 
 @code {
-    private List<Customer>? customers;
-    private bool isLoading = true;
-    private ApplicationUser? user;
+    private List<Customer>? _customers;
+    private bool _isLoading = true;
+    private ApplicationUser? _user;
 
     protected override async Task OnInitializedAsync()
     {
@@ -87,10 +87,10 @@ else
 
             if (principal.Identity?.IsAuthenticated == true)
             {
-                user = await UserManager.GetUserAsync(principal);
-                if (user != null)
+                _user = await UserManager.GetUserAsync(principal);
+                if (_user != null)
                 {
-                    customers = await CustomerService.GetCustomersAsync(user.Id);
+                    _customers = await CustomerService.GetCustomersAsync(_user.Id);
                 }
             }
         }
@@ -101,7 +101,7 @@ else
         }
         finally
         {
-            isLoading = false;
+            _isLoading = false;
         }
     }
 
