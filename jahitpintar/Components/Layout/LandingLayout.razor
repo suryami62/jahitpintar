@@ -1,0 +1,19 @@
+@inherits LayoutComponentBase
+
+<div class="d-flex flex-column min-vh-100">
+
+    <main class="flex-grow-1">
+        @Body
+    </main>
+
+    <footer class="border-top footer text-muted mt-auto py-3 bg-light">
+        <div class="container text-center">
+            &copy; @DateTime.Now.Year - JahitPintar
+            <div class="mt-2">
+                <a href="#" class="text-decoration-none me-2">Facebook</a>
+                <a href="#" class="text-decoration-none me-2">Twitter</a>
+                <a href="#" class="text-decoration-none">Instagram</a>
+            </div>
+        </div>
+    </footer>
+</div>

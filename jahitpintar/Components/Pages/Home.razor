@@ -1,7 +1,99 @@
 ﻿@page "/"
+@layout LandingLayout
 
-<PageTitle>Home</PageTitle>
+<PageTitle>JahitPintar - Manajemen Penjahitan Cerdas</PageTitle>
 
-<h1>Hello, world!</h1>
+<HeadContent>
+    <meta name="description" content="JahitPintar membantu penjahit mengelola pesanan, melacak pelanggan, dan membuat laporan keuangan dengan mudah. Solusi cerdas untuk bisnis menjahit Anda." />
+    <meta property="og:title" content="JahitPintar - Manajemen Penjahitan Cerdas" />
+    <meta property="og:description" content="Kelola bisnis menjahit Anda dengan mudah. Manajemen pesanan, pelacakan pelanggan, dan laporan keuangan dalam satu tempat." />
+</HeadContent>
 
-Welcome to your new app.
+<section class="hero-section py-5 mb-5 text-center container">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light display-4">Kelola Bisnis Menjahit Anda dengan Mudah</h1>
+            <p class="lead text-muted">Sederhanakan operasional Anda, pantau ukuran pelanggan, dan kelola keuangan Anda dengan JahitPintar. Solusi lengkap yang dirancang khusus untuk penjahit.</p>
+            <p>
+                <a href="Account/Login" class="btn btn-outline-primary btn-lg my-2 me-2">Masuk</a>
+                <a href="Account/Register" class="btn btn-primary btn-lg my-2">Daftar</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="features-section py-5 bg-light">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm bg-transparent">
+                    <div class="card-body">
+                        <div class="display-4 text-primary mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                            </svg>
+                        </div>
+                        <h3 class="card-title h4">Manajemen Pesanan</h3>
+                        <p class="card-text">Pantau setiap pesanan dari permintaan hingga pengiriman. Jangan pernah lewatkan tenggat waktu lagi.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm bg-transparent">
+                    <div class="card-body">
+                        <div class="display-4 text-primary mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+                                <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+                            </svg>
+                        </div>
+                        <h3 class="card-title h4">Pelacakan Pelanggan</h3>
+                        <p class="card-text">Simpan ukuran dan detail kontak dengan aman. Berikan layanan personal kepada setiap klien.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm bg-transparent">
+                    <div class="card-body">
+                        <div class="display-4 text-primary mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5Z"/>
+                            </svg>
+                        </div>
+                        <h3 class="card-title h4">Laporan Keuangan</h3>
+                        <p class="card-text">Dapatkan wawasan tentang pendapatan dan pengeluaran Anda. Buat keputusan bisnis berdasarkan data.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="testimonials-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Apa Kata Pengguna Kami</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <blockquote class="blockquote mb-0">
+                            <p>"JahitPintar telah merevolusi cara saya mengelola toko. Tidak ada lagi ukuran yang hilang atau pesanan yang terlupakan!"</p>
+                            <footer class="blockquote-footer mt-2">Budi Santoso, <cite title="Sumber">Penjahit di Rapih Jaya</cite></footer>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <blockquote class="blockquote mb-0">
+                            <p>"Fitur laporan keuangan membantu saya memahami margin keuntungan dengan lebih baik. Sangat direkomendasikan!"</p>
+                            <footer class="blockquote-footer mt-2">Siti Aminah, <cite title="Sumber">Pemilik Kebaya Cantik</cite></footer>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
