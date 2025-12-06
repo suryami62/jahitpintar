@@ -1,6 +1,6 @@
 #region
 
-using jahitpintar.Models;
+using jahitpintar.Features.Customer.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

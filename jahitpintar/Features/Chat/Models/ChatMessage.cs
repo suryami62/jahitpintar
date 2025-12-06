@@ -1,4 +1,4 @@
-namespace jahitpintar.Models;
+namespace jahitpintar.Features.Chat.Models;
 
 public class ChatMessage
 {

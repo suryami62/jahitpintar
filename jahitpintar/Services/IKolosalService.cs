@@ -1,6 +1,7 @@
 #region
 
-using jahitpintar.Models;
+using jahitpintar.Features.Chat.Models;
+using jahitpintar.Features.Customer.Models;
 
 #endregion
 

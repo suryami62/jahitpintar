@@ -3,7 +3,8 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using jahitpintar.Models;
+using jahitpintar.Features.Chat.Models;
+using jahitpintar.Features.Customer.Models;
 
 #endregion
 

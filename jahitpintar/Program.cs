@@ -3,6 +3,8 @@
 using jahitpintar.Components;
 using jahitpintar.Components.Account;
 using jahitpintar.Data;
+using jahitpintar.Features.Customer.Services;
+using jahitpintar.Features.Ocr.Services;
 using jahitpintar.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;

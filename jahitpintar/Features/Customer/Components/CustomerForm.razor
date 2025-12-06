@@ -1,10 +1,6 @@
 @page "/customers/add"
 @page "/customers/edit/{Id}"
-@using jahitpintar.Data
-@using jahitpintar.Models
-@using jahitpintar.Services
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Identity
+@using jahitpintar.Features.Ocr.Services
 @attribute [Authorize]
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> UserManager

@@ -2,14 +2,27 @@
 
 using System.Net.Http.Headers;
 using System.Text.Json;
-using jahitpintar.Models;
+using jahitpintar.Features.Ocr.Models;
 
 #endregion
 
-namespace jahitpintar.Services;
+namespace jahitpintar.Features.Ocr.Services;
 
+/// <summary>
+///     Provides OCR (Optical Character Recognition) functionality for extracting text and structured data from images and
+///     documents.
+///     Integrates with the Kolosal AI API to perform intelligent document processing.
+/// </summary>
 public class OcrService(HttpClient httpClient, IConfiguration configuration) : IOcrService
 {
+    /// <summary>
+    ///     Recognizes and extracts text and structured data from an image or document stream.
+    /// </summary>
+    /// <param name="imageStream">The stream containing the image or document data to process.</param>
+    /// <param name="fileName">The name of the file being processed, used to determine content type.</param>
+    /// <returns>A task representing the asynchronous operation, containing the OCR result with extracted data and metadata.</returns>
+    /// <exception cref="HttpRequestException">Thrown when the OCR API request fails.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the OCR response cannot be deserialized.</exception>
     public async Task<OcrResult?> RecognizeFormAsync(Stream imageStream, string fileName)
     {
         var apiKey = configuration["kolosal_api_key"];
@@ -62,6 +75,11 @@ public class OcrService(HttpClient httpClient, IConfiguration configuration) : I
         }
     }
 
+    /// <summary>
+    ///     Gets the JSON schema for custom extraction configuration.
+    ///     Defines the structure and fields to extract from documents during OCR processing.
+    /// </summary>
+    /// <returns>A JSON string containing the extraction schema configuration.</returns>
     private string GetExtractionSchemaJson()
     {
         var schema = new
@@ -105,6 +123,11 @@ public class OcrService(HttpClient httpClient, IConfiguration configuration) : I
         return JsonSerializer.Serialize(schema);
     }
 
+    /// <summary>
+    ///     Determines the appropriate MIME content type based on the file extension.
+    /// </summary>
+    /// <param name="fileName">The name of the file to analyze.</param>
+    /// <returns>The corresponding MIME content type string.</returns>
     private string GetContentType(string fileName)
     {
         var ext = Path.GetExtension(fileName).ToLowerInvariant();

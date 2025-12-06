@@ -1,10 +1,4 @@
 @page "/customers/details/{Id}"
-@using jahitpintar.Data
-@using jahitpintar.Models
-@using jahitpintar.Services
-@using jahitpintar.Components.Chat
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Identity
 @attribute [Authorize]
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> UserManager
@@ -213,7 +207,7 @@
         </div>
     }
 
-    <AiChatAssistant Customer="@_customer" />
+    <AiChatAssistant Customer="@_customer"/>
 </div>
 
 @code {

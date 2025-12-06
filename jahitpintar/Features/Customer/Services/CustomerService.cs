@@ -1,16 +1,24 @@
 #region
 
 using jahitpintar.Data;
-using jahitpintar.Models;
 using Microsoft.EntityFrameworkCore;
 
 #endregion
 
-namespace jahitpintar.Services;
+namespace jahitpintar.Features.Customer.Services;
 
+/// <summary>
+///     Provides customer management services for the JahitPintar application.
+/// </summary>
+/// <param name="factory">The database context factory for creating database contexts.</param>
 public class CustomerService(IDbContextFactory<ApplicationDbContext> factory) : ICustomerService
 {
-    public async Task<List<Customer>> GetCustomersAsync(string userId)
+    /// <summary>
+    ///     Retrieves all customers for the specified user.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <returns>A list of customers belonging to the user.</returns>
+    public async Task<List<Models.Customer>> GetCustomersAsync(string userId)
     {
         await using var context = await factory.CreateDbContextAsync();
         return await context.Customers
@@ -19,7 +27,12 @@ public class CustomerService(IDbContextFactory<ApplicationDbContext> factory) : 
             .ToListAsync();
     }
 
-    public async Task<Customer?> GetCustomerByIdAsync(string id)
+    /// <summary>
+    ///     Retrieves a specific customer by their unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the customer.</param>
+    /// <returns>The customer if found; otherwise, null.</returns>
+    public async Task<Models.Customer?> GetCustomerByIdAsync(string id)
     {
         await using var context = await factory.CreateDbContextAsync();
         return await context.Customers
@@ -27,7 +40,13 @@ public class CustomerService(IDbContextFactory<ApplicationDbContext> factory) : 
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    public async Task SaveCustomerAsync(Customer customer, string userId)
+    /// <summary>
+    ///     Saves a customer to the database (creates new or updates existing).
+    /// </summary>
+    /// <param name="customer">The customer to save.</param>
+    /// <param name="userId">The unique identifier of the user who owns this customer.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task SaveCustomerAsync(Models.Customer customer, string userId)
     {
         await using var context = await factory.CreateDbContextAsync();
         var existing = await context.Customers
@@ -51,6 +70,11 @@ public class CustomerService(IDbContextFactory<ApplicationDbContext> factory) : 
         await context.SaveChangesAsync();
     }
 
+    /// <summary>
+    ///     Deletes a customer from the database.
+    /// </summary>
+    /// <param name="id">The unique identifier of the customer to delete.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task DeleteCustomerAsync(string id)
     {
         await using var context = await factory.CreateDbContextAsync();
