@@ -105,10 +105,10 @@
 }
 
 @keyframes typing {
-     0%, 60%, 100% {
-         transform: translateY(0);
-     }
-     30% {
-         transform: translateY(-10px);
-     }
- }
+    0%, 60%, 100% {
+        transform: translateY(0);
+    }
+    30% {
+        transform: translateY(-10px);
+    }
+}

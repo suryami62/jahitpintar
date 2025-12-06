@@ -4,7 +4,7 @@
 <!-- Desktop/Tablet Sidebar Navigation -->
 <div class="d-none d-md-flex flex-column flex-shrink-0 bg-body-tertiary" style="width: 4.5rem; height: 100vh;">
     <a href="/" class="d-block p-3 link-body-emphasis text-decoration-none text-center" data-bs-toggle="tooltip"
-        data-bs-placement="right" data-bs-original-title="JahitPintar">
+       data-bs-placement="right" data-bs-original-title="JahitPintar">
         <i class="bi bi-scissors fs-3"></i>
         <span class="visually-hidden">JahitPintar</span>
     </a>
@@ -13,15 +13,15 @@
             <NotAuthorized>
                 <li class="nav-item">
                     <NavLink class="nav-link py-3 border-bottom rounded-0" href="Account/Login" data-bs-toggle="tooltip"
-                        data-bs-placement="right" aria-label="Masuk" data-bs-original-title="Masuk"
-                        Match="NavLinkMatch.All">
+                             data-bs-placement="right" aria-label="Masuk" data-bs-original-title="Masuk"
+                             Match="NavLinkMatch.All">
                         <i class="bi bi-box-arrow-in-right fs-4"></i>
                     </NavLink>
                 </li>
                 <li class="nav-item">
                     <NavLink class="nav-link py-3 border-bottom rounded-0" href="Account/Register"
-                        data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Daftar"
-                        data-bs-original-title="Daftar">
+                             data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Daftar"
+                             data-bs-original-title="Daftar">
                         <i class="bi bi-person-plus fs-4"></i>
                     </NavLink>
                 </li>
@@ -29,7 +29,8 @@
             <Authorized>
                 <li class="nav-item">
                     <NavLink class="nav-link py-3 border-bottom rounded-0" href="customers" data-bs-toggle="tooltip"
-                        data-bs-placement="right" aria-label="Data Pelanggan" data-bs-original-title="Data Pelanggan">
+                             data-bs-placement="right" aria-label="Data Pelanggan"
+                             data-bs-original-title="Data Pelanggan">
                         <i class="bi bi-people fs-4"></i>
                     </NavLink>
                 </li>
@@ -41,8 +42,8 @@
         <Authorized>
             <div class="dropdown border-top">
                 <a href="#"
-                    class="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle"
-                    data-bs-toggle="dropdown" aria-expanded="false">
+                   class="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle"
+                   data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-person-circle fs-4"></i>
                 </a>
                 <ul class="dropdown-menu text-small shadow">
@@ -52,8 +53,8 @@
                     </li>
                     <li>
                         <form action="Account/Logout" method="post">
-                            <AntiforgeryToken />
-                            <input type="hidden" name="ReturnUrl" value="@_currentUrl" />
+                            <AntiforgeryToken/>
+                            <input type="hidden" name="ReturnUrl" value="@_currentUrl"/>
                             <button type="submit" class="dropdown-item">Keluar</button>
                         </form>
                     </li>
@@ -70,14 +71,14 @@
             <NotAuthorized>
                 <li class="nav-item">
                     <NavLink class="nav-link d-flex flex-column align-items-center" href="Account/Login"
-                        aria-label="Masuk">
+                             aria-label="Masuk">
                         <i class="bi bi-box-arrow-in-right fs-5"></i>
                         <span class="small d-block">Masuk</span>
                     </NavLink>
                 </li>
                 <li class="nav-item">
                     <NavLink class="nav-link d-flex flex-column align-items-center" href="Account/Register"
-                        aria-label="Daftar">
+                             aria-label="Daftar">
                         <i class="bi bi-person-plus fs-5"></i>
                         <span class="small d-block">Daftar</span>
                     </NavLink>
@@ -86,7 +87,7 @@
             <Authorized>
                 <li class="nav-item">
                     <NavLink class="nav-link d-flex flex-column align-items-center" href="customers"
-                        aria-label="Data Pelanggan">
+                             aria-label="Data Pelanggan">
                         <i class="bi bi-people fs-5"></i>
                         <span class="small d-block">Data Pelanggan</span>
                     </NavLink>
@@ -96,8 +97,8 @@
                         <i class="bi bi-person-circle fs-5"></i>
                         <span class="small d-block">Profil</span>
                         <a class="dropdown-toggle position-absolute top-0 start-0 w-100 h-100"
-                            style="text-decoration: none; color: inherit;" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                           style="text-decoration: none; color: inherit;" data-bs-toggle="dropdown"
+                           aria-expanded="false">
                             <span class="visually-hidden">Menu Profil</span>
                         </a>
                         <ul class="dropdown-menu dropup-menu text-small shadow">
@@ -107,8 +108,8 @@
                             </li>
                             <li>
                                 <form action="Account/Logout" method="post">
-                                    <AntiforgeryToken />
-                                    <input type="hidden" name="ReturnUrl" value="@_currentUrl" />
+                                    <AntiforgeryToken/>
+                                    <input type="hidden" name="ReturnUrl" value="@_currentUrl"/>
                                     <button type="submit" class="dropdown-item">Keluar</button>
                                 </form>
                             </li>
