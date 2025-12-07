@@ -9,6 +9,10 @@
 
 Penjahit lokal sering kesulitan mengelola ribuan catatan ukuran pelanggan yang tertulis di buku tulis atau kertas usang. Data sering hilang, sulit dicari, dan tidak terstandarisasi. **JahitPintar** hadir sebagai solusi inklusif yang menjembatani kebiasaan tradisional dengan teknologi modern.
 
+## 🎬 Video Demo
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/o-wB-zI1Ufs?si=JX0sVUL6prz-z0Jp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ## 🚀 Fitur Unggulan
 
 ### 1. 📸 Smart OCR & Input Catatan Lama

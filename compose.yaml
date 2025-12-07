@@ -6,6 +6,7 @@ services:
       dockerfile: jahitpintar/Dockerfile
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Database=jahitpintar;Username=postgres;Password=example
+      - kolosal_api_key=your_kolosal_api_key_here
     depends_on:
       - db
     ports:
