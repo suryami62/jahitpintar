@@ -271,14 +271,38 @@
 
         <!-- Preferences Section -->
         <div class="card shadow-sm border-0 mb-4 rounded-4">
-            <div class="card-header bg-secondary bg-opacity-10 border-0 py-3">
-                <h5 class="mb-0 fw-bold text-secondary">
-                    <i class="bi bi-journal-text me-2"></i>Catatan Tambahan
+            <div class="card-header bg-info bg-opacity-10 border-0 py-3">
+                <h5 class="mb-0 fw-bold text-info">
+                    <i class="bi bi-heart me-2"></i>Preferensi & Catatan
                 </h5>
             </div>
             <div class="card-body p-4">
-                <div class="p-4 bg-light-subtle rounded-3 border border-light-subtle">
-                    <p class="card-text mb-0 text-dark" style="white-space: pre-wrap;">@_customer.AdditionalNotes</p>
+                <div class="row g-4 mb-4">
+                    <div class="col-12 col-md-4">
+                        <div class="d-flex flex-column">
+                            <small class="text-muted text-uppercase fw-bold mb-1">Warna Favorit</small>
+                            <h6 class="fw-bold text-dark mb-0">@(!string.IsNullOrEmpty(_customer.Preferences.FavoriteColor) ? _customer.Preferences.FavoriteColor : "-")</h6>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="d-flex flex-column">
+                            <small class="text-muted text-uppercase fw-bold mb-1">Ukuran Baju</small>
+                            <h6 class="fw-bold text-dark mb-0">@(!string.IsNullOrEmpty(_customer.Preferences.PreferredSize) ? _customer.Preferences.PreferredSize : "-")</h6>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="d-flex flex-column">
+                            <small class="text-muted text-uppercase fw-bold mb-1">Gaya Favorit</small>
+                            <h6 class="fw-bold text-dark mb-0">@(!string.IsNullOrEmpty(_customer.Preferences.PreferredStyle) ? _customer.Preferences.PreferredStyle : "-")</h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column">
+                    <small class="text-muted text-uppercase fw-bold mb-2">Catatan Tambahan</small>
+                    <div class="p-4 bg-light-subtle rounded-3 border border-light-subtle">
+                        <p class="card-text mb-0 text-dark" style="white-space: pre-wrap;">@(!string.IsNullOrEmpty(_customer.AdditionalNotes) ? _customer.AdditionalNotes : "Tidak ada catatan tambahan.")</p>
+                    </div>
                 </div>
             </div>
         </div>

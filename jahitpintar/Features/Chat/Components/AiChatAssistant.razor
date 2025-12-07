@@ -2,6 +2,7 @@
 @using jahitpintar.Features.Customer.Models
 @using jahitpintar.Services
 @using Microsoft.AspNetCore.Components.Web
+@using Markdig
 @inject IKolosalService KolosalService
 
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
@@ -42,7 +43,9 @@
                                         </div>
                                     }
                                     <div class="message-bubble @(message.Role == "user" ? "user-bubble" : "ai-bubble") p-3 rounded-4 @(message.Role == "user" ? "bg-primary text-white" : "bg-light text-dark")">
-                                        <p class="mb-0 small">@message.Content</p>
+                                        <div class="mb-0 small markdown-content">
+                                            @((MarkupString)Markdown.ToHtml(message.Content))
+                                        </div>
                                     </div>
                                     <small class="text-muted mt-1 px-2">@DateTime.Now.ToString("HH:mm")</small>
                                 </div>
@@ -156,33 +159,54 @@
         if (Customer == null)
             return "Anda adalah AI Assistant yang membantu dengan informasi pelanggan. Berikan respons yang helpful dan informatif.";
 
-        var prompt = $@"Anda adalah AI Assistant yang ahli dalam bidang jahit dan konveksi. 
-Anda memiliki akses ke informasi pelanggan berikut:
-
-DATA PELANGGAN:
-Nama: {Customer.Identity.Name}
-Nomor HP: {Customer.Identity.PhoneNumber}
-Alamat: {Customer.Identity.Address}
-
-UKURAN BADAN:
-- Tinggi: {Customer.Measurements.Height} cm
-- Berat: {Customer.Measurements.Weight} kg
-- Lingkar Dada: {Customer.Measurements.Upper.ChestCircumference} cm
-- Lingkar Pinggang: {Customer.Measurements.Lower.WaistCircumference} cm
-- Lingkar Pinggul: {Customer.Measurements.Upper.HipCircumference} cm
-- Panjang Lengan: {Customer.Measurements.Upper.SleeveLength} cm
-- Panjang Celana/Rok: {Customer.Measurements.Lower.PantsLength} cm
-
-CATATAN TAMBAHAN:
-{(string.IsNullOrEmpty(Customer.AdditionalNotes) ? "Tidak ada" : Customer.AdditionalNotes)}
-
-Tugas Anda:
+        var prompt = $@"Anda adalah seorang pakar AI Assistant yang sangat menguasai bidang jahit dan konveksi, serta memiliki pemahaman mendalam tentang fashion dan tekstil. 
+Tugas Anda adalah:
+1. Membantu penjahit profesional menganalisis kebutuhan klien berdasarkan data yang diberikan secara eksplisit untuk sesi ini
 1. Memberikan saran ukuran yang tepat berdasarkan data pelanggan
 2. Memberikan tips jahit yang relevan
 3. Menjawab pertanyaan tentang pola, bahan, atau teknik jahit
 4. Memberikan rekomendasi yang sesuai dengan karakteristik pelanggan
 
-Selalu berikan respons yang helpful, praktis, dan mudah dipahami.";
+PENTING: Jawab dengan SINGKAT dan JELAS (maksimal 3-4 kalimat atau poin per respons). Anda BOLEH menggunakan format Markdown seperti **bold** atau daftar (bullet points) untuk memperjelas informasi.
+
+DATA UKURAN PELANGGAN (Data ini aman untuk digunakan dalam analisis):
+Nama: {Customer.Identity.Name}
+
+UKURAN BADAN (Body Measurements):
+- Tinggi Badan: {Customer.Measurements.Height} cm
+- Berat Badan: {Customer.Measurements.Weight} kg
+
+ATASAN (Upper Body):
+- Lingkar Dada (LD): {Customer.Measurements.Upper.ChestCircumference} cm
+- Lingkar Pinggang (Upper): {Customer.Measurements.Upper.WaistCircumference} cm
+- Lingkar Pinggul: {Customer.Measurements.Upper.HipCircumference} cm
+- Lingkar Leher: {Customer.Measurements.Upper.NeckCircumference} cm
+- Lebar Bahu: {Customer.Measurements.Upper.ShoulderWidth} cm
+- Panjang Lengan: {Customer.Measurements.Upper.SleeveLength} cm
+- Lingkar Kerung Lengan: {Customer.Measurements.Upper.ArmholeCircumference} cm
+- Lingkar Lengan: {Customer.Measurements.Upper.ArmCircumference} cm
+- Lingkar Pergelangan: {Customer.Measurements.Upper.WristCircumference} cm
+- Lebar Muka: {Customer.Measurements.Upper.FrontWidth} cm
+- Lebar Punggung: {Customer.Measurements.Upper.BackWidth} cm
+- Tinggi Pinggul: {Customer.Measurements.Upper.HipHeight} cm
+- Panjang Baju: {Customer.Measurements.Upper.ShirtLength} cm
+
+BAWAHAN (Lower Body):
+- Lingkar Pinggang (Lower): {Customer.Measurements.Lower.WaistCircumference} cm
+- Lingkar Pesak: {Customer.Measurements.Lower.CrotchCircumference} cm
+- Lingkar Paha: {Customer.Measurements.Lower.ThighCircumference} cm
+- Lingkar Lutut: {Customer.Measurements.Lower.KneeCircumference} cm
+- Lingkar Kaki: {Customer.Measurements.Lower.AnkleCircumference} cm
+- Panjang Celana/Rok: {Customer.Measurements.Lower.PantsLength} cm
+- Tinggi Duduk: {Customer.Measurements.Lower.SeatedHeight} cm
+
+PREFERENSI:
+- Warna Favorit: {Customer.Preferences.FavoriteColor}
+- Ukuran Baju Favorit: {Customer.Preferences.PreferredSize}
+- Gaya Favorit: {Customer.Preferences.PreferredStyle}
+
+CATATAN TAMBAHAN:
+{(string.IsNullOrEmpty(Customer.AdditionalNotes) ? "Tidak ada" : Customer.AdditionalNotes)}";
 
         return prompt;
     }

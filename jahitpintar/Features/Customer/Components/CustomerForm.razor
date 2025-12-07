@@ -603,6 +603,11 @@
         if (extracted.Measurements.Height > 0) _customer.Measurements.Height = extracted.Measurements.Height;
         if (extracted.Measurements.Weight > 0) _customer.Measurements.Weight = extracted.Measurements.Weight;
 
+        // Preferences
+        if (!string.IsNullOrEmpty(extracted.Preferences.FavoriteColor)) _customer.Preferences.FavoriteColor = extracted.Preferences.FavoriteColor;
+        if (!string.IsNullOrEmpty(extracted.Preferences.PreferredSize)) _customer.Preferences.PreferredSize = extracted.Preferences.PreferredSize;
+        if (!string.IsNullOrEmpty(extracted.Preferences.PreferredStyle)) _customer.Preferences.PreferredStyle = extracted.Preferences.PreferredStyle;
+
         // Additional Notes
         if (!string.IsNullOrWhiteSpace(extracted.AdditionalNotes))
         {
