@@ -13,8 +13,8 @@ using jahitpintar.Data;
 namespace jahitpintar.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251204101911_InitIdentity")]
-    partial class InitIdentity
+    [Migration("20251207025409_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -244,7 +244,7 @@ namespace jahitpintar.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("jahitpintar.Models.Customer", b =>
+            modelBuilder.Entity("jahitpintar.Features.Customer.Models.Customer", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -364,7 +364,7 @@ namespace jahitpintar.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("jahitpintar.Models.Customer", b =>
+            modelBuilder.Entity("jahitpintar.Features.Customer.Models.Customer", b =>
                 {
                     b.HasOne("jahitpintar.Data.ApplicationUser", null)
                         .WithMany()
@@ -372,7 +372,7 @@ namespace jahitpintar.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("jahitpintar.Models.IdentityInfo", "Identity", b1 =>
+                    b.OwnsOne("jahitpintar.Features.Customer.Models.IdentityInfo", "Identity", b1 =>
                         {
                             b1.Property<string>("CustomerId")
                                 .HasColumnType("text");
@@ -401,7 +401,7 @@ namespace jahitpintar.Data.Migrations
                                 .HasForeignKey("CustomerId");
                         });
 
-                    b.OwnsOne("jahitpintar.Models.Measurements", "Measurements", b1 =>
+                    b.OwnsOne("jahitpintar.Features.Customer.Models.Measurements", "Measurements", b1 =>
                         {
                             b1.Property<string>("CustomerId")
                                 .HasColumnType("text");
@@ -419,7 +419,7 @@ namespace jahitpintar.Data.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("CustomerId");
 
-                            b1.OwnsOne("jahitpintar.Models.LowerBody", "Lower", b2 =>
+                            b1.OwnsOne("jahitpintar.Features.Customer.Models.LowerBody", "Lower", b2 =>
                                 {
                                     b2.Property<string>("MeasurementsCustomerId")
                                         .HasColumnType("text");
@@ -459,7 +459,7 @@ namespace jahitpintar.Data.Migrations
                                         .HasForeignKey("MeasurementsCustomerId");
                                 });
 
-                            b1.OwnsOne("jahitpintar.Models.UpperBody", "Upper", b2 =>
+                            b1.OwnsOne("jahitpintar.Features.Customer.Models.UpperBody", "Upper", b2 =>
                                 {
                                     b2.Property<string>("MeasurementsCustomerId")
                                         .HasColumnType("text");
@@ -518,12 +518,16 @@ namespace jahitpintar.Data.Migrations
                                 .IsRequired();
                         });
 
-                    b.OwnsOne("jahitpintar.Models.Preferences", "Preferences", b1 =>
+                    b.OwnsOne("jahitpintar.Features.Customer.Models.Preferences", "Preferences", b1 =>
                         {
                             b1.Property<string>("CustomerId")
                                 .HasColumnType("text");
 
                             b1.Property<string>("FabricFavorite")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("FavoriteColor")
                                 .IsRequired()
                                 .HasColumnType("text");
 
@@ -534,6 +538,14 @@ namespace jahitpintar.Data.Migrations
                             b1.PrimitiveCollection<List<string>>("OrderHistory")
                                 .IsRequired()
                                 .HasColumnType("text[]");
+
+                            b1.Property<string>("PreferredSize")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("PreferredStyle")
+                                .IsRequired()
+                                .HasColumnType("text");
 
                             b1.HasKey("CustomerId");
 

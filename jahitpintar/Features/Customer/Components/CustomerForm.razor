@@ -13,10 +13,13 @@
 
 <PageTitle>@(string.IsNullOrEmpty(Id) ? "Tambah Pelanggan" : "Edit Pelanggan")</PageTitle>
 
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>@(string.IsNullOrEmpty(Id) ? "Tambah Pelanggan Baru" : "Edit Data Pelanggan")</h1>
-        <a href="/customers" class="btn btn-outline-secondary">Kembali</a>
+<div class="container-fluid py-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+        <div class="d-flex flex-column">
+            <h1 class="h2 mb-1 fw-bold text-primary">@(string.IsNullOrEmpty(Id) ? "Tambah Pelanggan Baru" : "Edit Data Pelanggan")</h1>
+            <small class="text-muted">@(string.IsNullOrEmpty(Id) ? "Masukkan data pelanggan baru" : "Perbarui data pelanggan yang ada")</small>
+        </div>
+        <a href="/customers" class="btn btn-outline-secondary d-flex align-items-center gap-2 shadow-sm">Kembali</a>
     </div>
 
     @if (_isLoading)
@@ -34,32 +37,62 @@
     else
     {
         <!-- Smart Input Section -->
-        <div class="card mb-4 border-primary">
-            <div class="card-header bg-primary text-white">
-                <i class="bi bi-magic"></i> Input Cerdas (AI)
+        <div class="card shadow-sm border-0 mb-4 rounded-4">
+            <div class="card-header bg-primary bg-opacity-10 border-0 py-3">
+                <h5 class="mb-0 fw-bold text-primary d-flex align-items-center gap-2">
+                    <i class="bi bi-magic"></i> Input Cerdas (AI)
+                </h5>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <h5><i class="bi bi-camera"></i> Scan Catatan Lama</h5>
-                        <p class="text-muted small">Upload foto catatan tangan ukuran pelanggan.</p>
-                        <InputFile OnChange="HandleFileUpload" accept=".jpg,.jpeg,.png,.pdf" class="form-control"/>
-                        @if (_isOcrProcessing)
-                        {
-                            <div class="mt-2 text-primary">Sedang memproses gambar...</div>
-                        }
+            <div class="card-body p-4">
+                <div class="row g-4">
+                    <div class="col-12 col-lg-6">
+                        <div class="d-flex flex-column h-100">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <i class="bi bi-camera text-primary fs-4"></i>
+                                <h6 class="mb-0 fw-bold">Scan Catatan Lama</h6>
+                            </div>
+                            <p class="text-muted small mb-3">Upload foto catatan tangan ukuran pelanggan.</p>
+                            <div class="flex-grow-1">
+                                <InputFile OnChange="HandleFileUpload" accept=".jpg,.jpeg,.png,.pdf"
+                                           class="form-control form-control-lg"/>
+                                @if (_isOcrProcessing)
+                                {
+                                    <div class="mt-3 d-flex align-items-center gap-2 text-primary">
+                                        <div class="spinner-border spinner-border-sm" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <span>Sedang memproses gambar...</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <h5><i class="bi bi-chat-dots"></i> Input via Chat</h5>
-                        <p class="text-muted small">Ketik data pelanggan secara natural (contoh: "Pak Budi, LD 100,
-                            Alamat Kemang").</p>
-                        <div class="input-group">
-                            <textarea @bind="_chatInput" class="form-control" placeholder="Ketik di sini..."
-                                      rows="2"></textarea>
-                            <button class="btn btn-outline-primary" @onclick="ProcessChatInput"
-                                    disabled="@_isChatProcessing">
-                                @(_isChatProcessing ? "..." : "Proses")
-                            </button>
+                    <div class="col-12 col-lg-6">
+                        <div class="d-flex flex-column h-100">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <i class="bi bi-chat-dots text-success fs-4"></i>
+                                <h6 class="mb-0 fw-bold">Input via Chat</h6>
+                            </div>
+                            <p class="text-muted small mb-3">Ketik data pelanggan secara natural (contoh: "Pak Budi, LD 100, Alamat Kemang").</p>
+                            <div class="flex-grow-1">
+                                <div class="input-group input-group-lg">
+                                    <textarea @bind="_chatInput" class="form-control" placeholder="Ketik di sini..."
+                                              rows="3"></textarea>
+                                    <button class="btn btn-success" @onclick="ProcessChatInput"
+                                            disabled="@_isChatProcessing">
+                                        @if (_isChatProcessing)
+                                        {
+                                            <div class="spinner-border spinner-border-sm" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-send"></i>
+                                        }
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -69,183 +102,315 @@
         <EditForm Model="_customer" OnValidSubmit="SaveCustomer">
             <DataAnnotationsValidator/>
             <!-- Identity Section -->
-            <div class="card mb-3">
-                <div class="card-header">A. Data Identitas</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Nama Lengkap</label>
-                            <InputText @bind-Value="_customer.Identity.Name" class="form-control"/>
+            <div class="card shadow-sm border-0 mb-4 rounded-4">
+                <div class="card-header bg-primary bg-opacity-10 border-0 py-3">
+                    <h5 class="mb-0 fw-bold text-primary d-flex align-items-center gap-2">
+                        <i class="bi bi-person-vcard"></i>A. Data Identitas
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-12 col-md-6">
+                            <div class="form-floating">
+                                <InputText @bind-Value="_customer.Identity.Name" class="form-control form-control-lg"
+                                           placeholder="Nama Lengkap" id="fullName"/>
+                                <label for="fullName" class="fw-bold">Nama Lengkap</label>
+                            </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Nomor Handphone</label>
-                            <InputText @bind-Value="_customer.Identity.PhoneNumber" class="form-control"
-                                       placeholder="Contoh: 08123456789"/>
-                            <div class="mt-2">
-                                <label class="form-label small text-muted">Sosial Media (Centang jika aktif):</label>
-                                <div class="d-flex gap-2 flex-wrap">
+                        <div class="col-12 col-md-6">
+                            <div class="form-floating">
+                                <InputText @bind-Value="_customer.Identity.PhoneNumber" class="form-control form-control-lg"
+                                           placeholder="Nomor Handphone" id="phoneNumber"/>
+                                <label for="phoneNumber" class="fw-bold">Nomor Handphone</label>
+                            </div>
+                            <div class="mt-3">
+                                <label class="form-label small text-muted fw-bold">Sosial Media (Centang jika aktif):</label>
+                                <div class="d-flex flex-wrap gap-3 mt-2">
                                     @foreach (var platform in new[] { "WhatsApp", "Telegram", "Signal", "Line" })
                                     {
-                                        <div class="form-check">
+                                        <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="checkbox"
                                                    checked="@_customer.Identity.SocialMediaPlatforms.Contains(platform)"
-                                                   @onchange="@(e => ToggleSocialMedia(platform, e))"/>
-                                            <label class="form-check-label">@platform</label>
+                                                   @onchange="@(e => ToggleSocialMedia(platform, e))"
+                                                   id="@($"platform-{platform}")"/>
+                                            <label class="form-check-label fw-medium" for="@($"platform-{platform}")">@platform</label>
                                         </div>
                                     }
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label">Alamat Lengkap</label>
-                            <InputTextArea @bind-Value="_customer.Identity.Address" class="form-control" rows="2"/>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <InputTextArea @bind-Value="_customer.Identity.Address" class="form-control form-control-lg"
+                                               placeholder="Alamat Lengkap" rows="3" id="address"/>
+                                <label for="address" class="fw-bold">Alamat Lengkap</label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Measurements Section -->
-            <div class="card mb-3">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span>B. Data Ukuran Badan</span>
+            <div class="card shadow-sm border-0 mb-4 rounded-4">
+                <div class="card-header bg-success bg-opacity-10 border-0 py-3">
+                    <h5 class="mb-0 fw-bold text-success d-flex align-items-center gap-2">
+                        <i class="bi bi-rulers"></i>B. Data Ukuran Badan
+                    </h5>
                 </div>
-                <div class="card-body">
-                    <h6 class="text-primary mt-2">Atasan (Upper Body)</h6>
-                    <div class="row">
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Dada (LD)</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Upper.ChestCircumference"
-                                         class="form-control"/>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <!-- Upper Body -->
+                        <div class="col-12">
+                            <div class="bg-primary-subtle border border-primary-subtle rounded-3 p-4">
+                                <h6 class="text-primary fw-bold border-bottom border-primary border-opacity-25 pb-3 mb-4 d-flex align-items-center">
+                                    <i class="bi bi-arrow-up-circle me-2 fs-5"></i>Atasan (Upper Body)
+                                </h6>
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Upper.ChestCircumference"
+                                                         class="form-control form-control-lg" placeholder="Lingkar Dada (LD)" id="chestCircumference"/>
+                                            <label for="chestCircumference" class="fw-bold">Lingkar Dada (LD)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Upper.WaistCircumference"
+                                                         class="form-control form-control-lg" placeholder="Lingkar Pinggang" id="upperWaistCircumference"/>
+                                            <label for="upperWaistCircumference" class="fw-bold">Lingkar Pinggang</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Upper.HipCircumference"
+                                                         class="form-control form-control-lg" placeholder="Lingkar Pinggul" id="hipCircumference"/>
+                                            <label for="hipCircumference" class="fw-bold">Lingkar Pinggul</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Upper.NeckCircumference"
+                                                         class="form-control form-control-lg" placeholder="Lingkar Leher" id="neckCircumference"/>
+                                            <label for="neckCircumference" class="fw-bold">Lingkar Leher</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Upper.ShoulderWidth"
+                                                         class="form-control form-control-lg" placeholder="Lebar Bahu" id="shoulderWidth"/>
+                                            <label for="shoulderWidth" class="fw-bold">Lebar Bahu</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Upper.SleeveLength"
+                                                         class="form-control form-control-lg" placeholder="Panjang Lengan" id="sleeveLength"/>
+                                            <label for="sleeveLength" class="fw-bold">Panjang Lengan</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Upper.ArmholeCircumference"
+                                                         class="form-control form-control-lg" placeholder="Lingkar Kerung Lengan" id="armholeCircumference"/>
+                                            <label for="armholeCircumference" class="fw-bold">Lingkar Kerung Lengan</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Upper.ArmCircumference"
+                                                         class="form-control form-control-lg" placeholder="Lingkar Lengan" id="armCircumference"/>
+                                            <label for="armCircumference" class="fw-bold">Lingkar Lengan</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Upper.WristCircumference"
+                                                         class="form-control form-control-lg" placeholder="Lingkar Pergelangan" id="wristCircumference"/>
+                                            <label for="wristCircumference" class="fw-bold">Lingkar Pergelangan</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Upper.FrontWidth"
+                                                         class="form-control form-control-lg" placeholder="Lebar Muka" id="frontWidth"/>
+                                            <label for="frontWidth" class="fw-bold">Lebar Muka</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Upper.BackWidth"
+                                                         class="form-control form-control-lg" placeholder="Lebar Punggung" id="backWidth"/>
+                                            <label for="backWidth" class="fw-bold">Lebar Punggung</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Upper.HipHeight"
+                                                         class="form-control form-control-lg" placeholder="Tinggi Pinggul" id="hipHeight"/>
+                                            <label for="hipHeight" class="fw-bold">Tinggi Pinggul</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Upper.ShirtLength"
+                                                         class="form-control form-control-lg" placeholder="Panjang Baju" id="shirtLength"/>
+                                            <label for="shirtLength" class="fw-bold">Panjang Baju</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Pinggang</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Upper.WaistCircumference"
-                                         class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Pinggul</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Upper.HipCircumference"
-                                         class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Leher</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Upper.NeckCircumference"
-                                         class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lebar Bahu</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Upper.ShoulderWidth" class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Panjang Lengan</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Upper.SleeveLength" class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Kerung Lengan</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Upper.ArmholeCircumference"
-                                         class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Lengan</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Upper.ArmCircumference"
-                                         class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Pergelangan</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Upper.WristCircumference"
-                                         class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lebar Muka</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Upper.FrontWidth" class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lebar Punggung</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Upper.BackWidth" class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Tinggi Pinggul</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Upper.HipHeight" class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Panjang Baju</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Upper.ShirtLength" class="form-control"/>
-                        </div>
-                    </div>
 
-                    <h6 class="text-primary mt-3">Bawahan (Lower Body)</h6>
-                    <div class="row">
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Pinggang Celana / Rok</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Lower.WaistCircumference"
-                                         class="form-control"/>
+                        <!-- Lower Body -->
+                        <div class="col-12">
+                            <div class="bg-warning-subtle border border-warning-subtle rounded-3 p-4">
+                                <h6 class="text-warning-emphasis fw-bold border-bottom border-warning border-opacity-25 pb-3 mb-4 d-flex align-items-center">
+                                    <i class="bi bi-arrow-down-circle me-2 fs-5"></i>Bawahan (Lower Body)
+                                </h6>
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Lower.WaistCircumference"
+                                                         class="form-control form-control-lg" placeholder="Lingkar Pinggang Celana/Rok" id="lowerWaistCircumference"/>
+                                            <label for="lowerWaistCircumference" class="fw-bold">Lingkar Pinggang Celana/Rok</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Lower.CrotchCircumference"
+                                                         class="form-control form-control-lg" placeholder="Lingkar Pesak" id="crotchCircumference"/>
+                                            <label for="crotchCircumference" class="fw-bold">Lingkar Pesak</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Lower.ThighCircumference"
+                                                         class="form-control form-control-lg" placeholder="Lingkar Paha" id="thighCircumference"/>
+                                            <label for="thighCircumference" class="fw-bold">Lingkar Paha</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Lower.KneeCircumference"
+                                                         class="form-control form-control-lg" placeholder="Lingkar Lutut" id="kneeCircumference"/>
+                                            <label for="kneeCircumference" class="fw-bold">Lingkar Lutut</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Lower.AnkleCircumference"
+                                                         class="form-control form-control-lg" placeholder="Lingkar Kaki" id="ankleCircumference"/>
+                                            <label for="ankleCircumference" class="fw-bold">Lingkar Kaki</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Lower.PantsLength"
+                                                         class="form-control form-control-lg" placeholder="Panjang Celana/Rok" id="pantsLength"/>
+                                            <label for="pantsLength" class="fw-bold">Panjang Celana/Rok</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Lower.SeatedHeight"
+                                                         class="form-control form-control-lg" placeholder="Tinggi Duduk" id="seatedHeight"/>
+                                            <label for="seatedHeight" class="fw-bold">Tinggi Duduk</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Pesak</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Lower.CrotchCircumference"
-                                         class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Paha</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Lower.ThighCircumference"
-                                         class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Lutut</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Lower.KneeCircumference"
-                                         class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Lingkar Kaki</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Lower.AnkleCircumference"
-                                         class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Panjang Celana / Rok</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Lower.PantsLength" class="form-control"/>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label">Tinggi Duduk</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Lower.SeatedHeight" class="form-control"/>
-                        </div>
-                    </div>
 
-                    <h6 class="text-primary mt-3">Tambahan</h6>
-                    <div class="row">
-                        <div class="col-md-6 mb-2">
-                            <label class="form-label">Tinggi Badan (cm)</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Height" class="form-control"/>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label class="form-label">Berat Badan (kg)</label>
-                            <InputNumber @bind-Value="_customer.Measurements.Weight" class="form-control"/>
+                        <!-- Additional -->
+                        <div class="col-12">
+                            <div class="bg-info-subtle border border-info-subtle rounded-3 p-4">
+                                <h6 class="text-info-emphasis fw-bold border-bottom border-info border-opacity-25 pb-3 mb-4 d-flex align-items-center">
+                                    <i class="bi bi-plus-circle me-2 fs-5"></i>Tambahan
+                                </h6>
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Height"
+                                                         class="form-control form-control-lg" placeholder="Tinggi Badan" id="height"/>
+                                            <label for="height" class="fw-bold">Tinggi Badan (cm)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating">
+                                            <InputNumber @bind-Value="_customer.Measurements.Weight"
+                                                         class="form-control form-control-lg" placeholder="Berat Badan" id="weight"/>
+                                            <label for="weight" class="fw-bold">Berat Badan (kg)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Preferences Section -->
-            <div class="card mb-3">
-                <div class="card-header">C. Catatan Tambahan</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <InputTextArea @bind-Value="_customer.AdditionalNotes" class="form-control" rows="4"
-                                           placeholder="Jenis kain, model baju, pesanan khusus, dll..."/>
+            <div class="card shadow-sm border-0 mb-4 rounded-4">
+                <div class="card-header bg-info bg-opacity-10 border-0 py-3">
+                    <h5 class="mb-0 fw-bold text-info d-flex align-items-center gap-2">
+                        <i class="bi bi-heart"></i>C. Preferensi Pelanggan
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-12 col-md-6">
+                            <div class="form-floating">
+                                <InputText @bind-Value="_customer.Preferences.FavoriteColor"
+                                           class="form-control form-control-lg" placeholder="Warna Favorit" id="favoriteColor"/>
+                                <label for="favoriteColor" class="fw-bold">Warna Favorit</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-floating">
+                                <InputText @bind-Value="_customer.Preferences.PreferredSize"
+                                           class="form-control form-control-lg" placeholder="Ukuran Baju" id="preferredSize"/>
+                                <label for="preferredSize" class="fw-bold">Ukuran Baju</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-floating">
+                                <InputText @bind-Value="_customer.Preferences.PreferredStyle"
+                                           class="form-control form-control-lg" placeholder="Gaya Favorit" id="preferredStyle"/>
+                                <label for="preferredStyle" class="fw-bold">Gaya Favorit</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <InputTextArea @bind-Value="_customer.AdditionalNotes"
+                                               class="form-control" placeholder="Catatan" id="notes" rows="4" style="height: 120px;"/>
+                                <label for="notes" class="fw-bold">Catatan Tambahan</label>
+                            </div>
+                            <small class="text-muted mt-2 d-block">Jenis kain, model baju, pesanan khusus, dll...</small>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
+            <!-- Form Actions -->
+            <div class="d-flex flex-column flex-sm-row justify-content-end gap-3 mt-4 mb-5">
                 @if (!string.IsNullOrEmpty(Id))
                 {
-                    <button type="button" class="btn btn-outline-danger btn-lg me-md-2" @onclick="DeleteCustomer"
+                    <button type="button" class="btn btn-outline-danger btn-lg px-5" @onclick="DeleteCustomer"
                             disabled="@_isSaving">
-                        Hapus
+                        <i class="bi bi-trash me-2"></i>Hapus
                     </button>
                 }
-                <button type="submit" class="btn btn-primary btn-lg" disabled="@_isSaving">
+                <button type="submit" class="btn btn-success btn-lg px-5" disabled="@_isSaving">
+                    @if (_isSaving)
+                    {
+                        <div class="spinner-border spinner-border-sm me-2" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <i class="bi bi-check-circle me-2"></i>
+                    }
                     @(_isSaving ? "Menyimpan..." : "Simpan Data Pelanggan")
                 </button>
             </div>
