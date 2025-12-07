@@ -229,10 +229,11 @@ public class Preferences
     ///     Gets or sets the customer's order history.
     /// </summary>
     public List<string> OrderHistory { get; set; } = new();
+
     /// <summary>
     ///     Gets or sets the customer's favorite color.
     /// </summary>
-    
+
     public string FavoriteColor { get; set; } = string.Empty;
 
     /// <summary>
@@ -244,5 +245,4 @@ public class Preferences
     ///     Gets or sets the preferred style.
     /// </summary>
     public string PreferredStyle { get; set; } = string.Empty;
-    
 }

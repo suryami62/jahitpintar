@@ -1,19 +1,21 @@
 @using jahitpintar.Features.Chat.Models
 @using jahitpintar.Features.Customer.Models
 @using jahitpintar.Services
-@using Microsoft.AspNetCore.Components.Web
 @using Markdig
+@using Microsoft.AspNetCore.Components.Web
 @inject IKolosalService KolosalService
 
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
     @if (_isExpanded)
     {
-        <div class="card shadow-lg border-0 rounded-4 chat-container" style="width: 400px; max-width: 90vw; height: 600px; max-height: 80vh;">
+        <div class="card shadow-lg border-0 rounded-4 chat-container"
+             style="width: 400px; max-width: 90vw; height: 600px; max-height: 80vh;">
             <!-- Chat Header -->
             <div class="card-header bg-primary bg-opacity-10 border-0 py-3 rounded-top-4">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center gap-2">
-                        <div class="avatar-sm bg-primary bg-opacity-20 rounded-circle d-flex align-items-center justify-content-center">
+                        <div
+                            class="avatar-sm bg-primary bg-opacity-20 rounded-circle d-flex align-items-center justify-content-center">
                             <i class="bi bi-robot text-primary"></i>
                         </div>
                         <div>
@@ -21,7 +23,8 @@
                             <small class="text-muted">@(_isLoading ? "Mengetik..." : "Online")</small>
                         </div>
                     </div>
-                    <button class="btn btn-outline-secondary btn-sm rounded-circle" @onclick="ToggleChat" title="Tutup Chat">
+                    <button class="btn btn-outline-secondary btn-sm rounded-circle" @onclick="ToggleChat"
+                            title="Tutup Chat">
                         <i class="bi bi-x-lg"></i>
                     </button>
                 </div>
@@ -34,15 +37,20 @@
                     <div class="flex-grow-1 overflow-auto p-3">
                         @foreach (var message in _displayMessages)
                         {
-                            <div class="d-flex mb-3 @(message.Role == "user" ? "justify-content-end" : "justify-content-start")">
-                                <div class="d-flex flex-column @(message.Role == "user" ? "align-items-end" : "align-items-start")" style="max-width: 80%;">
+                            <div
+                                class="d-flex mb-3 @(message.Role == "user" ? "justify-content-end" : "justify-content-start")">
+                                <div
+                                    class="d-flex flex-column @(message.Role == "user" ? "align-items-end" : "align-items-start")"
+                                    style="max-width: 80%;">
                                     @if (message.Role == "assistant")
                                     {
-                                        <div class="avatar-xs bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mb-1">
+                                        <div
+                                            class="avatar-xs bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mb-1">
                                             <i class="bi bi-robot text-primary" style="font-size: 0.75rem;"></i>
                                         </div>
                                     }
-                                    <div class="message-bubble @(message.Role == "user" ? "user-bubble" : "ai-bubble") p-3 rounded-4 @(message.Role == "user" ? "bg-primary text-white" : "bg-light text-dark")">
+                                    <div
+                                        class="message-bubble @(message.Role == "user" ? "user-bubble" : "ai-bubble") p-3 rounded-4 @(message.Role == "user" ? "bg-primary text-white" : "bg-light text-dark")">
                                         <div class="mb-0 small markdown-content">
                                             @((MarkupString)Markdown.ToHtml(message.Content))
                                         </div>
@@ -57,7 +65,8 @@
                 {
                     <div class="flex-grow-1 d-flex align-items-center justify-content-center">
                         <div class="text-center text-muted p-4">
-                            <div class="avatar-lg bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3">
+                            <div
+                                class="avatar-lg bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3">
                                 <i class="bi bi-chat-dots text-primary" style="font-size: 2rem;"></i>
                             </div>
                             <h6 class="mb-2">Mulai Percakapan</h6>
@@ -71,7 +80,8 @@
                     <div class="px-3 pb-2">
                         <div class="d-flex justify-content-start">
                             <div class="d-flex align-items-end gap-2">
-                                <div class="avatar-xs bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center">
+                                <div
+                                    class="avatar-xs bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center">
                                     <i class="bi bi-robot text-primary" style="font-size: 0.75rem;"></i>
                                 </div>
                                 <div class="ai-bubble bg-light p-3 rounded-4">
@@ -118,7 +128,8 @@
     }
     else
     {
-        <button class="btn btn-primary btn-lg rounded-circle shadow chat-toggle p-3" @onclick="ToggleChat" title="Buka Chat Assistant">
+        <button class="btn btn-primary btn-lg rounded-circle shadow chat-toggle p-3" @onclick="ToggleChat"
+                title="Buka Chat Assistant">
             <i class="bi bi-chat-dots fs-4"></i>
         </button>
     }

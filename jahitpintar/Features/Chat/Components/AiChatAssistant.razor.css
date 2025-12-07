@@ -160,7 +160,7 @@
     margin-bottom: 0;
 }
 
-.markdown-content ul, 
+.markdown-content ul,
 .markdown-content ol {
     padding-left: 1.2rem;
     margin-bottom: 0.5rem;
@@ -178,8 +178,8 @@
     font-style: italic;
 }
 
-.markdown-content h1, 
-.markdown-content h2, 
+.markdown-content h1,
+.markdown-content h2,
 .markdown-content h3 {
     font-size: 1rem;
     font-weight: 700;
@@ -201,8 +201,13 @@
     animation: typing 1.4s infinite ease-in-out;
 }
 
-.typing-dot:nth-child(1) { animation-delay: -0.32s; }
-.typing-dot:nth-child(2) { animation-delay: -0.16s; }
+.typing-dot:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: -0.16s;
+}
 
 .avatar-sm {
     width: 40px;

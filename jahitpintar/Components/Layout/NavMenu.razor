@@ -2,7 +2,8 @@
 @inject NavigationManager NavigationManager
 
 <!-- Desktop/Tablet Sidebar Navigation -->
-<div class="d-none d-md-flex flex-column flex-shrink-0 bg-primary bg-opacity-10 border-end" style="width: 4.5rem; height: 100vh; backdrop-filter: blur(10px);">
+<div class="d-none d-md-flex flex-column flex-shrink-0 bg-primary bg-opacity-10 border-end"
+     style="width: 4.5rem; height: 100vh; backdrop-filter: blur(10px);">
     <a href="/" class="d-block p-3 link-body-emphasis text-decoration-none text-center" data-bs-toggle="tooltip"
        data-bs-placement="right" data-bs-original-title="JahitPintar">
         <i class="bi bi-scissors fs-3 text-primary"></i>
@@ -12,7 +13,8 @@
         <AuthorizeView>
             <NotAuthorized>
                 <li class="nav-item">
-                    <NavLink class="nav-link py-3 border-bottom rounded-0 link-secondary" href="Account/Login" data-bs-toggle="tooltip"
+                    <NavLink class="nav-link py-3 border-bottom rounded-0 link-secondary" href="Account/Login"
+                             data-bs-toggle="tooltip"
                              data-bs-placement="right" aria-label="Masuk" data-bs-original-title="Masuk"
                              Match="NavLinkMatch.All">
                         <i class="bi bi-box-arrow-in-right fs-4"></i>
@@ -28,7 +30,8 @@
             </NotAuthorized>
             <Authorized>
                 <li class="nav-item">
-                    <NavLink class="nav-link py-3 border-bottom rounded-0 link-secondary" href="customers" data-bs-toggle="tooltip"
+                    <NavLink class="nav-link py-3 border-bottom rounded-0 link-secondary" href="customers"
+                             data-bs-toggle="tooltip"
                              data-bs-placement="right" aria-label="Data Pelanggan"
                              data-bs-original-title="Data Pelanggan">
                         <i class="bi bi-people fs-4"></i>
@@ -48,8 +51,8 @@
                 </a>
                 <ul class="dropdown-menu text-small shadow dropdown-menu-end">
                     <li><a class="dropdown-item" href="Account/Manage">
-                        <i class="bi bi-person me-2"></i>Profil (@context.User.Identity?.Name)
-                    </a></li>
+                            <i class="bi bi-person me-2"></i>Profil (@context.User.Identity?.Name)
+                        </a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -97,7 +100,8 @@
                     </NavLink>
                 </li>
                 <li class="nav-item">
-                    <div class="nav-link d-flex flex-column align-items-center dropup position-relative" style="cursor: pointer;">
+                    <div class="nav-link d-flex flex-column align-items-center dropup position-relative"
+                         style="cursor: pointer;">
                         <i class="bi bi-person-circle fs-5 mb-1"></i>
                         <span class="small d-block text-truncate">Profil</span>
                         <a class="dropdown-toggle position-absolute top-0 start-0 w-100 h-100 rounded"
@@ -107,8 +111,8 @@
                         </a>
                         <ul class="dropdown-menu dropup-menu text-small shadow dropdown-menu-end">
                             <li><a class="dropdown-item" href="Account/Manage">
-                                <i class="bi bi-person me-2"></i>@context.User.Identity?.Name
-                            </a></li>
+                                    <i class="bi bi-person me-2"></i>@context.User.Identity?.Name
+                                </a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
