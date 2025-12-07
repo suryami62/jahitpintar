@@ -11,7 +11,7 @@ Penjahit lokal sering kesulitan mengelola ribuan catatan ukuran pelanggan yang t
 
 ## 🎬 Video Demo
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/o-wB-zI1Ufs?si=JX0sVUL6prz-z0Jp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![Watch the video](https://img.youtube.com/vi/o-wB-zI1Ufs/0.jpg)](https://youtu.be/o-wB-zI1Ufs)
 
 ## 🚀 Fitur Unggulan
 
